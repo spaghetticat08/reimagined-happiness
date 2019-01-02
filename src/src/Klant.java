@@ -18,7 +18,7 @@ public class Klant {
 	private String opmerking;
 	protected  int gebruikerNummer;
 
-	Klant(String naam, String adres, String plaats, String emailadres, String telefoonnummer, String opmerking, int gebruikerNummer) {
+	public Klant(String naam, String adres, String plaats, String emailadres, String telefoonnummer, String opmerking, int gebruikerNummer) {
 		this.naam = naam;
 		this.adres = adres;
 		this.plaats = plaats;
@@ -29,10 +29,10 @@ public class Klant {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void insertTestData(Klant testKlant) {
+	/*public void insertTestData(Klant testKlant) {
 		DataBaseManager newdb = new DataBaseManager();
 		newdb.insertData(testKlant);
-	}
+	}*/
 		
 	public String getKlantNaam() {
 		return naam;

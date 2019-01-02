@@ -61,7 +61,7 @@ ResultSet rs = null;
 		
 		return rs;  
 		}
-	public ResultSet getAllSuppliers(QueriesDB getSupplierQueryDB) {
+	public ResultSet getAllLeveranciers(QueriesDB getLeverancierQuery) {
 		try {
 			//execute query
 			String sqlSupplierQuery = "SELECT * FROM Gebruikers WHERE typeGebruiker=Zakelijk";

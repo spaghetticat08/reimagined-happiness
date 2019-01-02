@@ -32,13 +32,22 @@ public class Stichting {
 		return listOfCustomerNames;
 	}
 	
+	public String[] leverancierNames(Stichting newStichting, DataBaseManager db) {
+		//newStichting.getKlanten(newStichting, db);
+		int arraySize = leveranciers.size();
+		String[] listOfLeverancierNames = new String[leveranciers.size()];
+		int i=0;
+		for (Leverancier leverancier:leveranciers) {
+			listOfLeverancierNames[i] = leverancier.getLeverancierNaam();
+			i++;
+		}	
+		return listOfLeverancierNames;
+	}
+	
 	public String[] getCustomerData() {
-		
-		
 		return null;
 		
 	}
-	
 	
 	public String getStichtingNaam() {
 		return stichtingNaam;
@@ -53,26 +62,53 @@ public class Stichting {
 	public ArrayList<Klant> getKlanten(Stichting newStichting, DataBaseManager db) {
 		//ArrayList<Klant> klanten = new ArrayList();
 		newStichting.klanten = new ArrayList();
-
-		ResultSet rsCustomers=db.getCustomers(db);
-				
+		ResultSet rsCustomers=db.getCustomers(db);	
+		
 		try {
 			while (rsCustomers.next()) {
-				Klant tempKlant = new Klant(rsCustomers.getString("naam"), rsCustomers.getString("adres"), rsCustomers.getString("plaats"), rsCustomers.getString("emailadres"), rsCustomers.getString("telefoonnummer"), rsCustomers.getString("opmerkingen"), rsCustomers.getInt("gebruikerNummer"));
+				Klant tempKlant = new Klant(
+						rsCustomers.getString("naam"), 
+						rsCustomers.getString("adres"), 
+						rsCustomers.getString("plaats"), 
+						rsCustomers.getString("emailadres"), 
+						rsCustomers.getString("telefoonnummer"), 
+						rsCustomers.getString("opmerkingen"), 
+						rsCustomers.getInt("gebruikerNummer"));
 				newStichting.klanten.add(tempKlant);
 				//klanten.add(tempKlant);
 			}
-	
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return klanten;
 	}
+	
 	public void setKlanten(ArrayList<Klant> klanten) {
 		this.klanten = klanten;
 	}
-	public ArrayList<Leverancier> getLeveranciers() {
+	public ArrayList<Leverancier> getLeveranciers(Stichting newStichting, DataBaseManager db) {
+		//ArrayList<Klant> klanten = new ArrayList();
+			newStichting.leveranciers = new ArrayList();
+			ResultSet rsLeveranciers=db.getLeveranciers(db);			
+			try {
+				while (rsLeveranciers.next()) {
+					LeverancierNL tempLeverancier = new LeverancierNL(
+						rsLeveranciers.getString("naam"), 
+						rsLeveranciers.getString("contactPersoon"), 
+						rsLeveranciers.getString("adres"), 
+						rsLeveranciers.getString("plaats"), 
+						rsLeveranciers.getString("emailadres"), 
+						rsLeveranciers.getString("telefoonnummer"), 
+						rsLeveranciers.getString("website"), 
+						rsLeveranciers.getString("opmerkingen"), 
+						rsLeveranciers.getInt("gebruikerNummer"), 
+						rsLeveranciers.getInt("kvkNummer"));
+						newStichting.leveranciers.add(tempLeverancier);
+						//klanten.add(tempKlant);
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}		
 		return leveranciers;
 	}
 	public void setLeveranciers(ArrayList<Leverancier> leveranciers) {

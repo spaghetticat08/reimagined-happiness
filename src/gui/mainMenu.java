@@ -78,16 +78,12 @@ import src.Stichting;
 				@Override
 				public void handleEvent(Event e) {
 					mainShell.dispose();
-					SupplierList startSupplierMenu = new SupplierList(newStichting);
-					
+					SupplierList startSupplierMenu = new SupplierList(newStichting, db);
 				}
 			});
 			
 			//Make display for menu with orders
-			
-			
-			
-			
+		
 			//add listeners to buttons
 			
 			//run the event loop as long as the window is opened

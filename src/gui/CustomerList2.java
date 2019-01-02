@@ -4,21 +4,23 @@ import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import db.DataBaseManager;
+import src.Klant;
 import src.Stichting;
 
 import org.eclipse.swt.widgets.Button;
@@ -28,21 +30,21 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 
 public class CustomerList2 {
-	private DataBindingContext m_bindingContext;
-		
-	private  Text text;
-	private  Text text_1;
-	private  Text text_2;
-	private  Text text_3;
-	private  Text text_4;
-	private  Text text_5;
+	private Text textNaam;
+	private Text textAdres;
+	private Text textPlaats;
+	private Text textEmail;
+	private Text textTelefoonNr;
+	private Text TextOpmerkingen;
 	
 	Stichting newStichting;
-	 DataBaseManager db;
-	 private List customerList;
+	DataBaseManager db;
+	private List customerList;
 	/**
 	 * Launch the application.
 	 * @param args
@@ -98,6 +100,8 @@ public class CustomerList2 {
 		MenuItem mntmAanpassen = new MenuItem(menu_2, SWT.NONE);
 		mntmAanpassen.setText("Aanpassen...");
 		
+		//Make list
+		
 		customerList = new List(customerShell2, SWT.BORDER);
 		
 		customerList.setBounds(10, 36, 246, 478);
@@ -112,20 +116,20 @@ public class CustomerList2 {
 		
 		Label label = new Label(customerShell2, SWT.SEPARATOR | SWT.VERTICAL);
 		label.setBounds(262, 0, 15, 534);
-		
-		text = new Text(customerShell2, SWT.BORDER);
-		text.setBounds(393, 37, 144, 21);
-		
+				
 		Label lblNewLabel = new Label(customerShell2, SWT.NONE);
 		lblNewLabel.setBounds(283, 40, 55, 15);
 		lblNewLabel.setText("Naam");
+		
+		textNaam = new Text(customerShell2, SWT.BORDER);
+		textNaam.setBounds(393, 37, 144, 21);
 		
 		Label lblNewLabel_1 = new Label(customerShell2, SWT.NONE);
 		lblNewLabel_1.setBounds(283, 72, 55, 15);
 		lblNewLabel_1.setText("Adres");
 		
-		text_1 = new Text(customerShell2, SWT.BORDER);
-		text_1.setBounds(393, 69, 205, 21);
+		textAdres = new Text(customerShell2, SWT.BORDER);
+		textAdres.setBounds(393, 69, 205, 21);
 		
 		Label lblNewLabel_2 = new Label(customerShell2, SWT.NONE);
 		lblNewLabel_2.setBounds(283, 104, 55, 15);
@@ -135,39 +139,72 @@ public class CustomerList2 {
 		lblEmailadres.setBounds(283, 141, 76, 15);
 		lblEmailadres.setText("E-mailadres");
 		
-		text_2 = new Text(customerShell2, SWT.BORDER);
-		text_2.setBounds(393, 101, 76, 21);
+		textPlaats = new Text(customerShell2, SWT.BORDER);
+		textPlaats.setBounds(393, 101, 76, 21);
 		
-		text_3 = new Text(customerShell2, SWT.BORDER);
-		text_3.setBounds(393, 138, 144, 21);
+		textEmail = new Text(customerShell2, SWT.BORDER);
+		textEmail.setBounds(393, 138, 144, 21);
 		
 		Label lblTelefoonnummer = new Label(customerShell2, SWT.NONE);
 		lblTelefoonnummer.setBounds(283, 184, 110, 15);
 		lblTelefoonnummer.setText("Telefoonnummer");
 		
-		text_4 = new Text(customerShell2, SWT.BORDER);
-		text_4.setBounds(393, 181, 144, 21);
+		textTelefoonNr = new Text(customerShell2, SWT.BORDER);
+		textTelefoonNr.setBounds(393, 181, 144, 21);
 		
 		Label lblOpmerkingen = new Label(customerShell2, SWT.NONE);
 		lblOpmerkingen.setBounds(283, 236, 88, 15);
 		lblOpmerkingen.setText("Opmerkingen");
 		
-		text_5 = new Text(customerShell2, SWT.BORDER);
-		text_5.setBounds(393, 233, 205, 160);
+		TextOpmerkingen = new Text(customerShell2, SWT.BORDER);
+		TextOpmerkingen.setBounds(393, 233, 205, 160);
 		
 		CLabel lblFoto = new CLabel(customerShell2, SWT.NONE);
 		lblFoto.setBounds(604, 181, 133, 122);
 		lblFoto.setText("Foto");
 		
 		Button btnOpslaan = new Button(customerShell2, SWT.NONE);
-		btnOpslaan.setBounds(283, 489, 101, 25);
+		btnOpslaan.setBounds(393, 489, 101, 25);
 		btnOpslaan.setText("Opslaan");
+		btnOpslaan.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				//TODO: change selected information
+			}
+		});
 		
+		Button btnToevoegen = new Button(customerShell2, SWT.NONE);	
+		btnToevoegen.setBounds(283, 489, 101, 25);
+		btnToevoegen.setText("Toevoegen...");
+		btnToevoegen.addListener(SWT.Selection, new Listener(){
+			@Override
+			public void handleEvent(Event e) {
+				addCustomer();
+			}
+		});
 		
+		Button btnVerwijderen = new Button(customerShell2, SWT.NONE);
+		btnVerwijderen.setText("Verwijderen");
+		btnVerwijderen.setBounds(500, 489, 101, 25);
+		btnVerwijderen.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				//TODO: remove selected from database
+			}
+		});
+		
+		Button btnLeegmaken = new Button(customerShell2, SWT.NONE);
+		btnLeegmaken.setText("Leegmaken");
+		btnLeegmaken.setBounds(607, 489, 101, 25);
+		btnLeegmaken.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				//TODO: clear all boxes from text
+			}
+		});
 		
 		customerShell2.open();
 		customerShell2.layout();
-		m_bindingContext = initDataBindings();
 		while (!customerShell2.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -178,25 +215,26 @@ public class CustomerList2 {
 	public String[] getCustomerNames() {
 		//create a query to get the whole list of customers and return only the names
 		String[] listOfCustomerNames = newStichting.customerNames(newStichting, db);
-		
 		return listOfCustomerNames;
 	}
 	
 	public void showCustomerInformation() {
 		//String[] customerData = newStichting.
+	}
+	
+	//TODO: make checks for required fields and auto-generate GebruikerNummer
+	public void addCustomer() {
+		String klantNaam = textNaam.getText();
+		String klantAdres = textAdres.getText();
+		String klantPlaats = textPlaats.getText();
+		String klantEmail = textEmail.getText();
+		String klantTelefoonNr = textTelefoonNr.getText();
+		String klantOpmerking = TextOpmerkingen.getText();
+		
+		//is it allowed to create a new object Klant here?
+		//how do we create unique numbers?
+		Klant newKlant = new Klant(klantNaam, klantAdres, klantPlaats, klantEmail, klantTelefoonNr, klantOpmerking, 0);	
+		db.insertKlant(newKlant);
 		
 	}
-	
-
-	protected DataBindingContext initDataBindings() {
-		DataBindingContext bindingContext = new DataBindingContext();
-		//
-		IObservableValue observeTextText_1ObserveWidget = WidgetProperties.text(SWT.Modify).observe(text_1);
-		IObservableValue observeSelectionCustomerListObserveWidget = WidgetProperties.selection().observe(customerList);
-		bindingContext.bindValue(observeTextText_1ObserveWidget, observeSelectionCustomerListObserveWidget, null, null);
-		//
-		return bindingContext;
 	}
-	}
-	
-

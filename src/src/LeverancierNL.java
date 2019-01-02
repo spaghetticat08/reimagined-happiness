@@ -10,4 +10,14 @@ public class LeverancierNL extends Leverancier {
 		this.kvkNummer = kvkNummer;
 	}
 
+	public int getKvkNummer() {
+		return kvkNummer;
+	}
+
+	public void setKvkNummer(int kvkNummer) {
+		this.kvkNummer = kvkNummer;
+	}
+	
+	
+
 }

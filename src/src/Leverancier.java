@@ -17,11 +17,87 @@ public abstract class Leverancier {
 		this.contactPersoon = contactPersoon;
 		this.leverancierAdres = Adres;
 		this.leverancierPlaats = plaats;
+
 		this.leverancierEmailadres = emailadres;
 		this.leverancierTelNr = telefoonnummer;
 		this.website = website;
 		this.leverancierOpmerking = opmerking;
 		this.gebruikerNummer = gebruikerNummer;
 	}
+
+
+	public String getLeverancierNaam() {
+		return leverancierNaam;
+	}
+
+	public void setLeverancierNaam(String leverancierNaam) {
+		this.leverancierNaam = leverancierNaam;
+	}
+
+	public String getContactPersoon() {
+		return contactPersoon;
+	}
+
+	public void setContactPersoon(String contactPersoon) {
+		this.contactPersoon = contactPersoon;
+	}
+
+	public String getLeverancierAdres() {
+		return leverancierAdres;
+	}
+
+	public void setLeverancierAdres(String leverancierAdres) {
+		this.leverancierAdres = leverancierAdres;
+	}
+
+	public String getLeverancierPlaats() {
+		return leverancierPlaats;
+	}
+
+	public void setLeverancierPlaats(String leverancierPlaats) {
+		this.leverancierPlaats = leverancierPlaats;
+	}
+
+	public String getLeverancierEmailadres() {
+		return leverancierEmailadres;
+	}
+
+	public void setLeverancierEmailadres(String leverancierEmailadres) {
+		this.leverancierEmailadres = leverancierEmailadres;
+	}
+
+	public String getLeverancierTelNr() {
+		return leverancierTelNr;
+	}
+
+	public void setLeverancierTelNr(String leverancierTelNr) {
+		this.leverancierTelNr = leverancierTelNr;
+	}
+
+	public String getWebsite() {
+		return website;
+	}
+
+	public void setWebsite(String website) {
+		this.website = website;
+	}
+
+	public String getLeverancierOpmerking() {
+		return leverancierOpmerking;
+	}
+
+	public void setLeverancierOpmerking(String leverancierOpmerking) {
+		this.leverancierOpmerking = leverancierOpmerking;
+	}
+
+	public int getGebruikerNummer() {
+		return gebruikerNummer;
+	}
+
+	public void setGebruikerNummer(int gebruikerNummer) {
+		this.gebruikerNummer = gebruikerNummer;
+	}
+	
+	
 
 }

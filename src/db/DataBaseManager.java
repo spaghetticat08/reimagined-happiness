@@ -14,6 +14,8 @@ import javax.net.ssl.SSLEngineResult.Status;
 import src.BetalingsMiddel;
 import src.Klant;
 import src.Leverancier;
+import src.LeverancierBuitenland;
+import src.LeverancierNL;
 import src.Order;
 
 public class DataBaseManager {
@@ -39,13 +41,28 @@ public class DataBaseManager {
 		}
 	}
 	
-	public void insertData(Klant objKlant) {
+	/*temporary method to test db
+	 * public void insertData(Klant objKlant) {
 		try {
 			InsertDataDB tempDataObj = new InsertDataDB();
 			tempDataObj.createInsertQuery(objKlant);
-		} catch (Exception e) {
-			
+		} catch (Exception e) {	
 		}
+	}*/
+	
+	public void insertKlant(Klant newKlant) {
+		InsertDataDB insertKlantDb = new InsertDataDB();
+		insertKlantDb.createInsertKlant(newKlant);
+	}
+	
+	public void insertLevNL(LeverancierNL newLev) {
+		InsertDataDB insertLevNLDb = new InsertDataDB();
+		insertLevNLDb.createInsertNLLev(newLev);
+	}
+	
+	public void insertLevBL(LeverancierBuitenland newLev) {
+		InsertDataDB insertLevBLDb = new InsertDataDB();
+		insertLevBLDb.createInsertLev(newLev);
 	}
 	
 	public void getOrders() {
@@ -55,13 +72,12 @@ public class DataBaseManager {
 		} catch (Exception e) {}
 		
 	}
-	public void getSuppliers() {
-		try {
-			QueriesDB getSupplierQuery = new QueriesDB();
-			getSupplierQuery.getAllSuppliers(getSupplierQuery);
-			
-		} catch (Exception e) {}
+	public ResultSet getLeveranciers(DataBaseManager db) {
+		ResultSet rsLeveranciers = null;
+		QueriesDB getLeverancierQuery = new QueriesDB();
+		rsLeveranciers = getLeverancierQuery.getAllLeveranciers(getLeverancierQuery);
 		
+		return rsLeveranciers;
 	}
 	
 	public ResultSet getCustomers(DataBaseManager db) {
