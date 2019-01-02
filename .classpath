@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.swt"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/H2/bin/h2-1.4.197.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Britt/.p2/pool/plugins/org.eclipse.core.databinding_1.7.100.v20181030-1443.jar" sourcepath="C:/Users/Britt/.p2/pool/plugins/org.eclipse.core.databinding_1.7.100.v20181030-1443.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Britt/.p2/pool/plugins/org.eclipse.core.databinding.beans_1.4.300.v20181030-1443.jar" sourcepath="C:/Users/Britt/.p2/pool/plugins/org.eclipse.core.databinding.beans_1.4.300.v20181030-1443.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Britt/.p2/pool/plugins/org.eclipse.core.databinding.observable_1.6.300.v20180827-2028.jar" sourcepath="C:/Users/Britt/.p2/pool/plugins/org.eclipse.core.databinding.observable_1.6.300.v20180827-2028.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Britt/.p2/pool/plugins/org.eclipse.core.databinding.property_1.6.300.v20180827-2028.jar" sourcepath="C:/Users/Britt/.p2/pool/plugins/org.eclipse.core.databinding.property_1.6.300.v20180827-2028.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Britt/.p2/pool/plugins/org.eclipse.jface.databinding_1.8.400.v20181030-1443.jar" sourcepath="C:/Users/Britt/.p2/pool/plugins/org.eclipse.jface.databinding_1.8.400.v20181030-1443.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Britt/.p2/pool/plugins/org.eclipse.equinox.common_3.10.200.v20181021-1645.jar" sourcepath="C:/Users/Britt/.p2/pool/plugins/org.eclipse.equinox.common_3.10.200.v20181021-1645.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Britt/.p2/pool/plugins/com.ibm.icu_63.1.0.v20181030-1705.jar" sourcepath="C:/Users/Britt/.p2/pool/plugins/com.ibm.icu_63.1.0.v20181030-1705.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
