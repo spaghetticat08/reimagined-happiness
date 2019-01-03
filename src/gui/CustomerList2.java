@@ -8,30 +8,21 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wb.swt.SWTResourceManager;
-
-import db.DataBaseManager;
+import Interface.DataBaseInterface;
+import src.ApplicatieLogica;
 import src.Klant;
 import src.Stichting;
 
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
+
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+
 
 
 public class CustomerList2 {
@@ -40,16 +31,19 @@ public class CustomerList2 {
 	private Text textPlaats;
 	private Text textEmail;
 	private Text textTelefoonNr;
-	private Text TextOpmerkingen;
+	private Text textOpmerkingen;
+	
+	private ArrayList<Klant> klantinfo;
+	ApplicatieLogica newLogic = new ApplicatieLogica();
 	
 	Stichting newStichting;
-	DataBaseManager db;
+	DataBaseInterface db;
 	private List customerList;
 	/**
 	 * Launch the application.
 	 * @param args
 	 */
-	public CustomerList2(Stichting newStichting, DataBaseManager db) {
+	public CustomerList2(Stichting newStichting, DataBaseInterface db) {
 		this.newStichting = newStichting;
 		this.db = db;
 		Display display = Display.getDefault();
@@ -103,17 +97,12 @@ public class CustomerList2 {
 		//Make list
 		
 		customerList = new List(customerShell2, SWT.BORDER);
-		
 		customerList.setBounds(10, 36, 246, 478);
 		
 		String[] listOfCustomerNames = getCustomerNames();
 		customerList.setItems(listOfCustomerNames);
-		
-		customerList.addMouseListener(new MouseAdapter() {
-			public void showCustomerInformation(MouseEvent e) {
-			}
-		});
-		
+		customerList.addListener(SWT.Selection, event -> onListItemSelect(customerList));
+
 		Label label = new Label(customerShell2, SWT.SEPARATOR | SWT.VERTICAL);
 		label.setBounds(262, 0, 15, 534);
 				
@@ -156,8 +145,8 @@ public class CustomerList2 {
 		lblOpmerkingen.setBounds(283, 236, 88, 15);
 		lblOpmerkingen.setText("Opmerkingen");
 		
-		TextOpmerkingen = new Text(customerShell2, SWT.BORDER);
-		TextOpmerkingen.setBounds(393, 233, 205, 160);
+		textOpmerkingen = new Text(customerShell2, SWT.BORDER);
+		textOpmerkingen.setBounds(393, 233, 205, 160);
 		
 		CLabel lblFoto = new CLabel(customerShell2, SWT.NONE);
 		lblFoto.setBounds(604, 181, 133, 122);
@@ -218,8 +207,17 @@ public class CustomerList2 {
 		return listOfCustomerNames;
 	}
 	
-	public void showCustomerInformation() {
-		//String[] customerData = newStichting.
+	public void onListItemSelect(List customerList) {
+		int indexNo = customerList.getFocusIndex();
+		//klantinfo = newStichting.getKlanten(newStichting, db);
+		//Klant infoKlant = klantinfo.get(indexNo);
+		Klant infoKlant = newLogic.getKlantInfo(indexNo, newStichting, db);
+		textNaam.setText(infoKlant.getKlantNaam());
+		textAdres.setText(infoKlant.getKlantAdres());
+		textPlaats.setText(infoKlant.getKlantPlaats());
+		textEmail.setText(infoKlant.getKlantEmailadres());
+		textTelefoonNr.setText(infoKlant.getKlantTelefoonnummer());
+		textOpmerkingen.setText(infoKlant.getKlantOpmerking());
 	}
 	
 	//TODO: make checks for required fields and auto-generate GebruikerNummer
@@ -229,12 +227,11 @@ public class CustomerList2 {
 		String klantPlaats = textPlaats.getText();
 		String klantEmail = textEmail.getText();
 		String klantTelefoonNr = textTelefoonNr.getText();
-		String klantOpmerking = TextOpmerkingen.getText();
+		String klantOpmerking = textOpmerkingen.getText();
 		
 		//is it allowed to create a new object Klant here?
 		//how do we create unique numbers?
-		Klant newKlant = new Klant(klantNaam, klantAdres, klantPlaats, klantEmail, klantTelefoonNr, klantOpmerking, 0);	
-		db.insertKlant(newKlant);
+		newLogic.insertKlant(db, klantNaam, klantAdres, klantPlaats, klantEmail, klantTelefoonNr, klantOpmerking);
 		
 	}
 	}

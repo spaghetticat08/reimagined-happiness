@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import db.DataBaseManager;
+import Interface.DataBaseInterface;
 
 public class Stichting {
 	private String stichtingNaam;
@@ -12,6 +13,7 @@ public class Stichting {
 	private ArrayList<Klant> klanten = new ArrayList();
 	private ArrayList<Leverancier> leveranciers= new ArrayList();
 	private ArrayList<Order> orders = new ArrayList();
+	DataBaseInterface db;
 	
 	Stichting(String stichtingNaam, double balans) {
 		this.stichtingNaam = stichtingNaam;
@@ -20,7 +22,8 @@ public class Stichting {
 	
 	//public Stichting() {}
 	
-	public String[] customerNames(Stichting newStichting, DataBaseManager db){
+	public String[] customerNames(Stichting newStichting, DataBaseInterface db){
+		this.db = db;
 		newStichting.getKlanten(newStichting, db);
 		int arraySize = klanten.size();
 		String[] listOfCustomerNames = new String[klanten.size()];
@@ -28,12 +31,12 @@ public class Stichting {
 		for (Klant klant: klanten) {
 			listOfCustomerNames[i] = klant.getKlantNaam();
 			i++;
-		}		
+		}
 		return listOfCustomerNames;
 	}
 	
-	public String[] leverancierNames(Stichting newStichting, DataBaseManager db) {
-		//newStichting.getKlanten(newStichting, db);
+	public String[] leverancierNames(Stichting newStichting, DataBaseInterface db) {
+		newStichting.getLeveranciers(newStichting, db);
 		int arraySize = leveranciers.size();
 		String[] listOfLeverancierNames = new String[leveranciers.size()];
 		int i=0;
@@ -42,11 +45,6 @@ public class Stichting {
 			i++;
 		}	
 		return listOfLeverancierNames;
-	}
-	
-	public String[] getCustomerData() {
-		return null;
-		
 	}
 	
 	public String getStichtingNaam() {
@@ -59,7 +57,7 @@ public class Stichting {
 	public void setBalans(Double balans) {
 		this.balans = balans;
 	}
-	public ArrayList<Klant> getKlanten(Stichting newStichting, DataBaseManager db) {
+	public ArrayList<Klant> getKlanten(Stichting newStichting, DataBaseInterface db) {
 		//ArrayList<Klant> klanten = new ArrayList();
 		newStichting.klanten = new ArrayList();
 		ResultSet rsCustomers=db.getCustomers(db);	
@@ -81,28 +79,28 @@ public class Stichting {
 			e.printStackTrace();
 		}
 		return klanten;
-	}
-	
+	}	
 	public void setKlanten(ArrayList<Klant> klanten) {
 		this.klanten = klanten;
 	}
-	public ArrayList<Leverancier> getLeveranciers(Stichting newStichting, DataBaseManager db) {
-		//ArrayList<Klant> klanten = new ArrayList();
+	
+	public ArrayList<Leverancier> getLeveranciers(Stichting newStichting, DataBaseInterface db) {
+		    //ArrayList<Klant> klanten = new ArrayList();
 			newStichting.leveranciers = new ArrayList();
 			ResultSet rsLeveranciers=db.getLeveranciers(db);			
 			try {
 				while (rsLeveranciers.next()) {
-					LeverancierNL tempLeverancier = new LeverancierNL(
+					Leverancier tempLeverancier = new Leverancier(
 						rsLeveranciers.getString("naam"), 
 						rsLeveranciers.getString("contactPersoon"), 
 						rsLeveranciers.getString("adres"), 
-						rsLeveranciers.getString("plaats"), 
+						rsLeveranciers.getString("plaats"),
+						rsLeveranciers.getString("land"),
 						rsLeveranciers.getString("emailadres"), 
 						rsLeveranciers.getString("telefoonnummer"), 
 						rsLeveranciers.getString("website"), 
 						rsLeveranciers.getString("opmerkingen"), 
-						rsLeveranciers.getInt("gebruikerNummer"), 
-						rsLeveranciers.getInt("kvkNummer"));
+						rsLeveranciers.getInt("gebruikerNummer"));
 						newStichting.leveranciers.add(tempLeverancier);
 						//klanten.add(tempKlant);
 					}

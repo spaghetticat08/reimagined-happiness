@@ -10,9 +10,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
+import Interface.DataBaseInterface;
 import db.DataBaseManager;
-import src.LeverancierBuitenland;
-import src.LeverancierNL;
+import src.ApplicatieLogica;
+import src.Leverancier;
 import src.Stichting;
 
 import org.eclipse.swt.layout.GridLayout;
@@ -32,7 +33,8 @@ import org.eclipse.swt.widgets.Listener;
 
 public class SupplierList {
 	Stichting newStichting;
-	DataBaseManager db;
+	DataBaseInterface db;
+	ApplicatieLogica newLevLogic = new ApplicatieLogica();
 	
 	private  Text textNaam;
 	private  Text textAdres;
@@ -44,14 +46,13 @@ public class SupplierList {
 	private List supplierList;
 	private Text textContact;
 	private Text textWebsite;
-	private Text textKvk;
 	private Text textLand;
 	
 	/**
 	 * Launch the application.
 	 * @param args
 	 */
-	public SupplierList(Stichting newStichting, DataBaseManager db) {
+	public SupplierList(Stichting newStichting, DataBaseInterface db) {
 		//todo: put if-statement in to check if window has already been opened
 		//if yes, center the existing one, else create new one
 		this.newStichting = newStichting;
@@ -117,11 +118,7 @@ public class SupplierList {
 				
 		String[] listOfSupplierNames = getSupplierNames();
 		supplierList.setItems(listOfSupplierNames);
-				
-		supplierList.addMouseListener(new MouseAdapter() {
-			public void showCustomerInformation(MouseEvent e) {
-			}
-		});
+		supplierList.addListener(SWT.Selection, event -> onListItemSelect(supplierList));
 		
 		Label label = new Label(supplierShell, SWT.SEPARATOR | SWT.VERTICAL);
 		label.setBounds(262, 0, 15, 534);
@@ -186,13 +183,6 @@ public class SupplierList {
 		lblWebsite.setText("Website");
 		lblWebsite.setBounds(283, 258, 55, 15);
 		
-		textKvk = new Text(supplierShell, SWT.BORDER);
-		textKvk.setBounds(393, 282, 144, 21);
-		
-		Label lblKvknummer = new Label(supplierShell, SWT.NONE);
-		lblKvknummer.setText("Kvk-nummer");
-		lblKvknummer.setBounds(283, 288, 76, 15);
-		
 		textLand = new Text(supplierShell, SWT.BORDER);
 		textLand.setBounds(393, 147, 144, 21);
 		
@@ -231,32 +221,34 @@ public class SupplierList {
 	public String[] getSupplierNames() {
 		//create a query to get the whole list of customers and return only the names
 		String[] listOfSupplierNames = newStichting.leverancierNames(newStichting, db);
-		
 		return listOfSupplierNames;
 	}
-	//TODO: make function to autogenerate gebruikerNummer
-	//TODO: make checks for required fields
+
+	public void onListItemSelect(List supplierList) {
+		int indexNo = supplierList.getFocusIndex();
+		Leverancier infoLev = newLevLogic.getLevInfo(indexNo, newStichting, db);
+		textNaam.setText(infoLev.getLeverancierNaam());
+		textContact.setText(infoLev.getContactPersoon());
+		textAdres.setText(infoLev.getLeverancierAdres());
+		textPlaats.setText(infoLev.getLeverancierPlaats());
+		textLand.setText(infoLev.getLand());
+		textEmail.setText(infoLev.getLeverancierEmailadres());
+		textTelefoonNr.setText(infoLev.getLeverancierTelNr());
+		textWebsite.setText(infoLev.getWebsite());
+		textOpmerking.setText(infoLev.getLeverancierOpmerking());
+	}
 	
 	public void addSupplier() {
-		String LevNaam = textNaam.getText();
-		String ContactPersoon = textContact.getText();
-		String LevAdres = textAdres.getText();
-		String LevPlaats = textPlaats.getText();
-		String Land = textLand.getText();
-		String LevEmail = textEmail.getText();
-		String LevTelefoonNr = textTelefoonNr.getText();
-		String Website = textWebsite.getText();
-		int kvk = Integer.valueOf(textKvk.getText());
-		String LevOpmerking = textOpmerking.getText();
-		
-		if (Land == "") {
-			LeverancierNL newLev = new LeverancierNL(LevNaam, ContactPersoon, LevAdres, LevPlaats, LevEmail, LevTelefoonNr, Website, LevOpmerking, kvk, 12);
-			db.insertLevNL(newLev);
-		}
-		else {
-			LeverancierBuitenland newLev = new LeverancierBuitenland(LevOpmerking, LevOpmerking, LevOpmerking, LevOpmerking, LevOpmerking, LevOpmerking, LevOpmerking, LevOpmerking, LevOpmerking, 11);
-			db.insertLevBL(newLev);
-		}
-		
+		String levNaam = textNaam.getText();
+		String contactPersoon = textContact.getText();
+		String levAdres = textAdres.getText();
+		String levPlaats = textPlaats.getText();
+		String land = textLand.getText();
+		String levEmail = textEmail.getText();
+		String levTelefoonNr = textTelefoonNr.getText();
+		String website = textWebsite.getText();
+		String levOpmerking = textOpmerking.getText();
+		//do this in logic class
+		newLevLogic.insertLeverancier(db, levNaam, contactPersoon, levAdres, levPlaats, land, levEmail, levTelefoonNr, website, levOpmerking);
 	}
 }

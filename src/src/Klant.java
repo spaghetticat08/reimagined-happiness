@@ -34,6 +34,16 @@ public class Klant {
 		newdb.insertData(testKlant);
 	}*/
 		
+	public Klant(String naam, String adres, String plaats, String emailadres, String telefoonnummer,
+			String opmerking) {
+		this.naam = naam;
+		this.adres = adres;
+		this.plaats = plaats;
+		this.emailadres = emailadres;
+		this.telefoonnummer = telefoonnummer;
+		this.opmerking = opmerking;
+	}
+
 	public String getKlantNaam() {
 		return naam;
 	}

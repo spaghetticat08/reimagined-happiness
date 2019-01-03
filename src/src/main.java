@@ -2,6 +2,7 @@ package src;
 
 import java.util.ArrayList;
 
+import Interface.DataBaseInterface;
 import db.DataBaseManager;
 import gui.mainMenu;
 import src.Klant;
@@ -10,7 +11,7 @@ public class main {
 	
 	public static void main(String[] args) {
 		Stichting newStichting = new Stichting("Yoga4Life", 10.00);
-		DataBaseManager db = new DataBaseManager();
+		DataBaseInterface db = new DataBaseManager();
 		mainMenu startMainMenu = new mainMenu(newStichting, db);
 		
 			

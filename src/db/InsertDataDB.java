@@ -5,11 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-
 import src.Klant;
-import src.LeverancierBuitenland;
-import src.LeverancierNL;
+import src.Leverancier;
 import src.Order;
 
 public class InsertDataDB {
@@ -32,8 +29,8 @@ public class InsertDataDB {
 			System.out.println("Connection succesful!");
 			
 			//create a prepared statement, consisting data from obj
-			insertData = "INSERT INTO GEBRUIKER(gebruikerNummer, naam, adres, plaats, emailadres, telefoonnummer, contactpersoon, website, opmerkingen, bedrijfsnaam, typeGebruiker)"+  
-					"VALUES('"+obj.getGebruikerNummer()+"',"+"'"+obj.getKlantNaam()+ "', "+" '"+obj.getKlantAdres()+"', "+" '"+obj.getKlantPlaats()+"', "+" '"+obj.getKlantEmailadres()+"', "+" '"+obj.getKlantTelefoonnummer()+"', "+" '', "+" '', "+" '"+obj.getKlantOpmerking()+"', "+" '', "+"'Klant'"+")";
+			insertData = "INSERT INTO GEBRUIKER( naam, adres, plaats, emailadres, telefoonnummer, contactpersoon, website, opmerkingen, typeGebruiker)"+  
+					"VALUES('"+obj.getKlantNaam()+ "', "+"'"+obj.getKlantAdres()+"', "+" '"+obj.getKlantPlaats()+"', "+" '"+obj.getKlantEmailadres()+"', "+" '"+obj.getKlantTelefoonnummer()+"', "+" '', "+" '', "+" '"+obj.getKlantOpmerking()+"', "+" 'Klant' )";
 			
 			PreparedStatement ps = conn.prepareStatement(insertData);
 			
@@ -62,52 +59,15 @@ public class InsertDataDB {
 	}	
 	}
 	
-	public void createInsertLev(LeverancierBuitenland newLev) {
+	public void createInsertLev(Leverancier newLev) {
 		try {
 			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
 			System.out.println("Connection succesful!");
 			
 			//create a prepared statement, consisting data from obj
-			insertData = "INSERT INTO GEBRUIKER(gebruikerNummer, naam, adres, plaats, emailadres, telefoonnummer, contactpersoon, website, opmerkingen, typeGebruiker, kvkNummer, land)"+  
-					"VALUES('"+newLev.getGebruikerNummer()+"',"+"'"+newLev.getLeverancierNaam()+ "', "+" '"+newLev.getLeverancierAdres()+"', "+" '"+newLev.getLeverancierPlaats()+"', "+" '"+newLev.getLeverancierEmailadres()+"', "+" '"+newLev.getLeverancierTelNr()+"', "+" '"+newLev.getContactPersoon()+"', "+" '"+newLev.getWebsite()+"', "+" '"+newLev.getLeverancierOpmerking()+"', "+" 'Leverancier', "+"'"+newLev.getLand()+"')";
-			
-			PreparedStatement ps = conn.prepareStatement(insertData);
-			
-			//execute statement
-			ps.executeUpdate();
-			System.out.println("Insertion successfull!");
-			
-			//clean up everything
-			//stmt.close();
-			//conn.close();
-			
-		} catch(SQLException se) {
-			se.printStackTrace();
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(stmt !=null) stmt.close();
-			} catch(SQLException se2) {
-			} try {
-				if(conn !=null) conn.close();
-			} catch(SQLException se) {
-				se.printStackTrace();
-			}
-		
-	}
-	}
-
-	public void createInsertNLLev(LeverancierNL newLev) {
-		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
-			System.out.println("Connection succesful!");
-			
-			//create a prepared statement, consisting data from obj
-			insertData = "INSERT INTO GEBRUIKER(gebruikerNummer, naam, adres, plaats, emailadres, telefoonnummer, contactpersoon, website, opmerkingen, typeGebruiker, kvkNummer, land)"+  
-					"VALUES('"+newLev.getGebruikerNummer()+"',"+"'"+newLev.getLeverancierNaam()+ "', "+" '"+newLev.getLeverancierAdres()+"', "+" '"+newLev.getLeverancierPlaats()+"', "+" '"+newLev.getLeverancierEmailadres()+"', "+" '"+newLev.getLeverancierTelNr()+"', "+" '"+newLev.getContactPersoon()+"', "+" '"+newLev.getWebsite()+"', "+" '"+newLev.getLeverancierOpmerking()+"', "+" 'Leverancier', "+"'"+newLev.getKvkNummer()+"', "+" '')";
+			insertData = "INSERT INTO GEBRUIKER(naam, adres, plaats, emailadres, telefoonnummer, contactpersoon, website, opmerkingen, typeGebruiker, land)"+  
+					"VALUES('"+newLev.getLeverancierNaam()+ "', "+" '"+newLev.getLeverancierAdres()+"', "+" '"+newLev.getLeverancierPlaats()+"', "+" '"+newLev.getLeverancierEmailadres()+"', "+" '"+newLev.getLeverancierTelNr()+"', "+" '"+newLev.getContactPersoon()+"', "+" '"+newLev.getWebsite()+"', "+" '"+newLev.getLeverancierOpmerking()+"', "+" 'Leverancier', "+"'"+newLev.getLand()+"')";
 			
 			PreparedStatement ps = conn.prepareStatement(insertData);
 			

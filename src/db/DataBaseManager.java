@@ -11,14 +11,13 @@ import java.util.logging.Logger;
 
 import javax.net.ssl.SSLEngineResult.Status;
 
+import Interface.DataBaseInterface;
 import src.BetalingsMiddel;
 import src.Klant;
 import src.Leverancier;
-import src.LeverancierBuitenland;
-import src.LeverancierNL;
 import src.Order;
 
-public class DataBaseManager {
+public class DataBaseManager implements DataBaseInterface {
 	
 	 final String JDBC_DRIVER	= "org.h2.Driver";
 	 final String DB_URL = "jdbc:h2:~/ShowCaseDB";
@@ -32,6 +31,7 @@ public class DataBaseManager {
 	
 	public DataBaseManager() {	
 	}
+	
 	public void createDatabase() {
 		try {
 			CreateDB newDB = new CreateDB();
@@ -55,14 +55,9 @@ public class DataBaseManager {
 		insertKlantDb.createInsertKlant(newKlant);
 	}
 	
-	public void insertLevNL(LeverancierNL newLev) {
-		InsertDataDB insertLevNLDb = new InsertDataDB();
-		insertLevNLDb.createInsertNLLev(newLev);
-	}
-	
-	public void insertLevBL(LeverancierBuitenland newLev) {
-		InsertDataDB insertLevBLDb = new InsertDataDB();
-		insertLevBLDb.createInsertLev(newLev);
+	public void insertLeverancier(Leverancier newLev) {
+		InsertDataDB insertLevDb = new InsertDataDB();
+		insertLevDb.createInsertLev(newLev);
 	}
 	
 	public void insertOrder(Order newOrder) {
@@ -77,18 +72,18 @@ public class DataBaseManager {
 		} catch (Exception e) {}
 		
 	}
-	public ResultSet getLeveranciers(DataBaseManager db) {
+	public ResultSet getLeveranciers(DataBaseInterface db) {
 		ResultSet rsLeveranciers = null;
-		QueriesDB getLeverancierQuery = new QueriesDB();
-		rsLeveranciers = getLeverancierQuery.getAllLeveranciers(getLeverancierQuery);
+		QueriesDB LeverancierQuery = new QueriesDB();
+		rsLeveranciers = LeverancierQuery.getAllLeveranciers();
 		
 		return rsLeveranciers;
 	}
 	
-	public ResultSet getCustomers(DataBaseManager db) {
+	public ResultSet getCustomers(DataBaseInterface db) {
 		ResultSet rsCustomers = null;
 		QueriesDB getCustomerQuery = new QueriesDB();
-		rsCustomers= getCustomerQuery.getAllCustomers(getCustomerQuery);
+		rsCustomers= getCustomerQuery.getAllCustomers();
 		
 		/*try {
 			while (rsCustomers.next()) {
@@ -102,7 +97,7 @@ public class DataBaseManager {
 		return rsCustomers;
 		
 	}
-		
+
 	
 	}
 		

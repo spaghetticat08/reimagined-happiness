@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
+import Interface.DataBaseInterface;
 import db.DataBaseManager;
 import db.QueriesDB;
 import src.BetalingsMiddel;
@@ -43,14 +44,14 @@ public class addOrder {
 	String datum;
 	Status orderStatus;
 	BetalingsMiddel betaling;
-	DataBaseManager db;
+	DataBaseInterface db;
 	Stichting newStichting;
 	private Text textDatum;
 	/**
 	 * Launch the application.
 	 * @param args
 	 */
-	public addOrder(Stichting newStichting, DataBaseManager db) {
+	public addOrder(Stichting newStichting, DataBaseInterface db) {
 		this.newStichting = newStichting;
 		this.db = db;
 		Display display = Display.getDefault();

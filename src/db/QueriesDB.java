@@ -22,7 +22,7 @@ public class QueriesDB {
 	 
 	public void getAllOrders() {}
 	
-	public ResultSet getAllCustomers(QueriesDB getCustomerQueryDB) {
+	public ResultSet getAllCustomers() {
 ResultSet rs = null;
 		
 		try {
@@ -61,29 +61,24 @@ ResultSet rs = null;
 		
 		return rs;  
 		}
-	public ResultSet getAllLeveranciers(QueriesDB getLeverancierQuery) {
+	public ResultSet getAllLeveranciers() {
 		try {
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			System.out.println("Connection succesful!");
+			stmt = conn.createStatement();
+			
 			//execute query
-			String sqlSupplierQuery = "SELECT * FROM Gebruikers WHERE typeGebruiker=Zakelijk";
+			String sqlSupplierQuery = "SELECT * FROM Gebruiker WHERE typeGebruiker='Leverancier'";
 			rs = stmt.executeQuery(sqlSupplierQuery);
 			
 			//Clean-up environment
-			stmt.close();
-			conn.close();
+			
 		} catch(SQLException se) {
 			se.printStackTrace();
 		} catch(Exception e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if(stmt !=null) stmt.close();
-			} catch(SQLException se2) {
-			} try {
-				if(conn !=null) conn.close();
-			} catch(SQLException se) {
-				se.printStackTrace();
-			}
-	}
+		}
+	
 		return rs;
 	}
 	

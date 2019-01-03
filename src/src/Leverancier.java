@@ -1,28 +1,43 @@
 package src;
 
-public abstract class Leverancier {
+public class Leverancier {
 	private String leverancierNaam;
 	private String contactPersoon;
 	private String leverancierAdres;
 	private String leverancierPlaats;
+	private String land;
+	
+
 	private String leverancierEmailadres;
 	private String leverancierTelNr;
 	private String website;
 	private String leverancierOpmerking;
 	private int gebruikerNummer;
 
-	public Leverancier(String naam, String contactPersoon, String Adres, String plaats, String emailadres, String telefoonnummer, String website, String opmerking, int gebruikerNummer) {
+	public Leverancier(String naam, String contactPersoon, String Adres, String plaats, String land, String emailadres, String telefoonnummer, String website, String opmerking, int gebruikerNummer) {
 		// TODO Auto-generated constructor stub
 		this.leverancierNaam= naam;
 		this.contactPersoon = contactPersoon;
 		this.leverancierAdres = Adres;
 		this.leverancierPlaats = plaats;
-
+		this.land = land;
 		this.leverancierEmailadres = emailadres;
 		this.leverancierTelNr = telefoonnummer;
 		this.website = website;
 		this.leverancierOpmerking = opmerking;
 		this.gebruikerNummer = gebruikerNummer;
+	}
+	
+	public Leverancier(String naam, String contactPersoon, String Adres, String plaats, String land, String emailadres, String telefoonnummer, String website, String opmerking) {
+		this.leverancierNaam= naam;
+		this.contactPersoon = contactPersoon;
+		this.leverancierAdres = Adres;
+		this.leverancierPlaats = plaats;
+		this.land = land;
+		this.leverancierEmailadres = emailadres;
+		this.leverancierTelNr = telefoonnummer;
+		this.website = website;
+		this.leverancierOpmerking = opmerking;
 	}
 
 
@@ -49,7 +64,13 @@ public abstract class Leverancier {
 	public void setLeverancierAdres(String leverancierAdres) {
 		this.leverancierAdres = leverancierAdres;
 	}
-
+	public String getLand() {
+		return land;
+	}
+	
+	public void setLand(String land) {
+		this.land = land;
+	}
 	public String getLeverancierPlaats() {
 		return leverancierPlaats;
 	}
