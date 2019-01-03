@@ -65,6 +65,11 @@ public class DataBaseManager {
 		insertLevBLDb.createInsertLev(newLev);
 	}
 	
+	public void insertOrder(Order newOrder) {
+		InsertDataDB insertOrder = new InsertDataDB();
+		insertOrder.createInsertOrder(newOrder);
+	}
+	
 	public void getOrders() {
 		try {
 			

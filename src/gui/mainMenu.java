@@ -46,7 +46,7 @@ import src.Stichting;
 			@Override
 			public void handleEvent(Event e) {
 				mainShell.dispose();
-				addOrder startOrderMenu = new addOrder(newStichting);
+				addOrder startOrderMenu = new addOrder(newStichting, db);
 				
 			}
 			});
