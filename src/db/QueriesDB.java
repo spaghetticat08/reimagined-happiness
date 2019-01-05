@@ -17,13 +17,42 @@ public class QueriesDB {
 	String JDBC_DRIVER =  "org.h2.Driver";
 	String DB_URL = "jdbc:h2:~/ShowCaseDB";
 	//DB credentials
-	 final String USER = "sa";
-	 final String PASS = "";
+	final String USER = "sa";
+	final String PASS = "";
 	 
-	public void getAllOrders() {}
+	
+	public QueriesDB() {}	
+		
+	public ResultSet getAllOrders() {
+		ResultSet rs = null;
+		try {
+			try {
+				Class.forName(JDBC_DRIVER);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			System.out.println("Connection succesful!");
+			stmt = conn.createStatement();
+			
+			//execute query
+			String sqlCustomerQuery = "SELECT * FROM OrderTable";
+			rs = stmt.executeQuery(sqlCustomerQuery);
+			
+			
+			} catch(SQLException se) {
+				se.printStackTrace();
+			} 
+			
+			catch(Exception e) {
+				e.printStackTrace();
+			} 
+			return rs;
+	}
 	
 	public ResultSet getAllCustomers() {
-ResultSet rs = null;
+		ResultSet rs = null;
 		
 		try {
 			try {
@@ -82,6 +111,6 @@ ResultSet rs = null;
 		return rs;
 	}
 	
-	public QueriesDB() {}
+
 		
 }

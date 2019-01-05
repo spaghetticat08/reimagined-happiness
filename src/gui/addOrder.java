@@ -25,7 +25,9 @@ import org.eclipse.swt.widgets.Text;
 import Interface.DataBaseInterface;
 import db.DataBaseManager;
 import db.QueriesDB;
+import src.ApplicatieLogica;
 import src.BetalingsMiddel;
+import src.Leverancier;
 import src.Order;
 import src.Status;
 import src.Stichting;
@@ -47,6 +49,8 @@ public class addOrder {
 	DataBaseInterface db;
 	Stichting newStichting;
 	private Text textDatum;
+	
+	ApplicatieLogica newLogic = new ApplicatieLogica();
 	/**
 	 * Launch the application.
 	 * @param args
@@ -62,6 +66,7 @@ public class addOrder {
 		orderTable.setBounds(56, 68, 765, 296);
 		orderTable.setHeaderVisible(true);
 		orderTable.setLinesVisible(true);
+		//orderTable.addListener(SWT.Selection, event -> onOrderItemSelect(orderTable, comboStatus, comboBetaling));
 		
 		TableColumn tblclmnOrderNumber = new TableColumn(orderTable, SWT.NONE);
 		tblclmnOrderNumber.setWidth(151);
@@ -73,7 +78,9 @@ public class addOrder {
 		
 		TableColumn tblclmnPrice = new TableColumn(orderTable, SWT.NONE);
 		tblclmnPrice.setWidth(100);
-		tblclmnPrice.setText("Totaalprijs");
+		tblclmnPrice.setText("Bedrag");
+		
+		loadAllOrders();
 	
 		Label lblCurrentBalanse = new Label(orderShell, SWT.NONE);
 		lblCurrentBalanse.setBounds(639, 37, 94, 25);
@@ -206,16 +213,10 @@ public class addOrder {
 				// TODO Auto-generated method stub
 			}
 		});
-		Button btnToevoegen = new Button(orderShell, SWT.NONE);
-		btnToevoegen.setText("Toevoegen");
-		btnToevoegen.setBounds(427, 581, 94, 25);
-		btnToevoegen.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				addOrder();
-			}
-		});
-		Combo comboBetaling = new Combo(orderShell, SWT.NONE);
+		
+		Combo comboBetaling = new Combo(orderShell, SWT.READ_ONLY);
+		//TODO: It would be nice if we can automatically iterate through the enum and add all items for future changes
+		comboBetaling.setItems(new String[] {BetalingsMiddel.Bankoverschrijving.toString(), BetalingsMiddel.Contant.toString(), BetalingsMiddel.CreditCard.toString(), BetalingsMiddel.IDeal.toString(), BetalingsMiddel.Paypal.toString()});
 		comboBetaling.setBounds(154, 545, 267, 25);
 		comboBetaling.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -224,7 +225,9 @@ public class addOrder {
 			}
 		});
 		
-		Combo comboStatus = new Combo(orderShell, SWT.NONE);
+		Combo comboStatus = new Combo(orderShell, SWT.READ_ONLY);
+		comboStatus.setItems(new String[] {Status.Voltooid.toString(), Status.Geannuleerd.toString(), Status.AfwachtingBetaling.toString().trim()});
+		comboStatus.setVisibleItemCount(5);
 		comboStatus.setBounds(154, 516, 267, 23);
 		comboStatus.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -232,7 +235,16 @@ public class addOrder {
 				orderStatus = Status.valueOf(comboStatus.getText());
 			}
 		});
-		
+
+		Button btnToevoegen = new Button(orderShell, SWT.NONE);
+		btnToevoegen.setText("Toevoegen");
+		btnToevoegen.setBounds(427, 581, 94, 25);
+		btnToevoegen.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				addOrder(comboStatus, comboBetaling);
+			}
+		});
 		Button datumBtn = new Button(orderShell, SWT.PUSH);
 		datumBtn.setBounds(340, 439, 81, 21);
 		datumBtn.setText("Datum kiezen");
@@ -240,6 +252,7 @@ public class addOrder {
 		textDatum = new Text(orderShell, SWT.BORDER);
 		textDatum.setBounds(154, 439, 146, 21);
 		
+		orderTable.addListener(SWT.Selection, event -> onOrderItemSelect(orderTable, comboStatus, comboBetaling));
 		
 		datumBtn.addSelectionListener (new SelectionAdapter () {
 		    public void widgetSelected (SelectionEvent e) {
@@ -281,14 +294,44 @@ public class addOrder {
 		}
 	}
 	
-	public void addOrder() {
-		int ordernummer = Integer.valueOf(textOrdernummer.getText());
+	public void addOrder(Combo comboStatus, Combo comboBetaling) {
+		//int ordernummer = Integer.valueOf(textOrdernummer.getText());
 		String artikel = textArtikel.getText();
 		Double prijs = Double.valueOf(textPrijs.getText());
 		int gebruikerNummer = Integer.valueOf(textGebruiker.getText());
 		String omschrijving = textOmschrijving.getText();
+		String datum = textDatum.getText();
+		BetalingsMiddel betaling = BetalingsMiddel.valueOf(comboBetaling.getText());
+		Status orderStatus = Status.valueOf(comboStatus.getText());
+		//temp values for enums (to be fixed)
 		
-		Order newOrder = new Order(artikel, ordernummer, omschrijving, datum, prijs, betaling, orderStatus, null, null, gebruikerNummer);
+		Order newOrder = new Order(artikel, omschrijving, datum, prijs, betaling, orderStatus, null, null, gebruikerNummer);
 		db.insertOrder(newOrder);
+	}
+	
+	public void loadAllOrders() {
+		ArrayList<Order> orders = newStichting.getOrders(newStichting, db);
+		for (Order order:orders) {
+			TableItem newItem = new TableItem(orderTable, SWT.NONE);
+			String[] tableItems = new String[] {Integer.toString(order.getOrdernummer()), order.getDatum(), Double.toString(order.getPrijs())};
+			newItem.setText(tableItems);
+		}
+	}
+	
+	public void onOrderItemSelect(Table orderTable, Combo comboStatus, Combo comboBetaling) {
+		int indexNo = orderTable.getSelectionIndex();
+		System.out.println(indexNo);
+		Order infoOrder = newLogic.getOrderInfo(indexNo, newStichting, db);
+		textOrdernummer.setText(Integer.toString(infoOrder.getOrdernummer()));
+		textArtikel.setText(infoOrder.getArtikel());
+		textPrijs.setText(Double.toString(infoOrder.getPrijs()));
+		textGebruiker.setText(Integer.toString(infoOrder.getGebruikerNummer()));
+		textOmschrijving.setText(infoOrder.getOmschrijving());
+		System.out.println(infoOrder.getOrderStatus().toString());
+		comboStatus.setText(infoOrder.getOrderStatus().toString());
+		comboBetaling.setText(infoOrder.getTypeBetaling().toString());
+		//(infoOrder.getOrderStatus());
+		//comboBetaling
+		
 	}
 }

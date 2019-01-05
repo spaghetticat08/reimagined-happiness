@@ -13,9 +13,8 @@ public class Order {
 	private int gebruikerNummer;
 	
 
-	public Order(String artikel, int ordernummer, String omschrijving, String datum, Double prijs,BetalingsMiddel typeBetaling, Status orderStatus, Leverancier leverancierNaam, Klant klantNaam, int gebruikerNummer ) {
+	public Order(String artikel, String omschrijving, String datum, Double prijs,BetalingsMiddel typeBetaling, Status orderStatus, Leverancier leverancierNaam, Klant klantNaam, int gebruikerNummer ) {
 		this.artikel = artikel;
-		this.ordernummer = ordernummer;
 		this.omschrijving = omschrijving;
 		this.datum = datum;
 		this.prijs = prijs;
@@ -25,8 +24,17 @@ public class Order {
 		this.klantNaam = klantNaam;
 		this.gebruikerNummer = gebruikerNummer;
 	}
-	
-	
+		
+	public Order(String artikel, int ordernummer, String omschrijving, String datum, Double prijs,BetalingsMiddel typeBetaling, Status orderStatus, int gebruikerNummer) {
+		this.artikel = artikel;
+		this.ordernummer = ordernummer;
+		this.omschrijving = omschrijving;
+		this.datum = datum;
+		this.prijs = prijs;
+		this.typeBetaling = typeBetaling;
+		this.orderStatus = orderStatus;
+		this.gebruikerNummer = gebruikerNummer;
+	}
 
 	
 	public int getGebruikerNummer() {

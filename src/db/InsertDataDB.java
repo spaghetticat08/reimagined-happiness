@@ -103,8 +103,8 @@ public class InsertDataDB {
 			System.out.println("Connection succesful!");
 			
 			//create a prepared statement, consisting data from obj
-			insertData = "INSERT INTO OrderTable(ordernummer, artikel, omschrijving, datum, prijs, typeBetaling, orderStatus, gebgebruikerNummer)"+  
-					"VALUES('"+newOrder.getOrdernummer()+"',"+"'"+newOrder.getArtikel()+ "', "+"'"+newOrder.getOmschrijving()+"', "+"'"+newOrder.getDatum()+"', "+"'"+newOrder.getPrijs()+"', "+"'"+newOrder.getTypeBetaling()+"', "+"'"+newOrder.getOrderStatus()+"',"+"'"+newOrder.getGebruikerNummer()+"',"+")";
+			insertData = "INSERT INTO OrderTable(artikel, omschrijving, datum, prijs, typeBetaling, orderStatus, gebgebruikerNummer)"+  
+					"VALUES('"+newOrder.getArtikel()+ "', "+"'"+newOrder.getOmschrijving()+"', "+"'"+newOrder.getDatum()+"', "+"'"+newOrder.getPrijs()+"', "+"'"+newOrder.getTypeBetaling()+"', "+"'"+newOrder.getOrderStatus()+"',"+"'"+newOrder.getGebruikerNummer()+"',"+")";
 			
 			PreparedStatement ps = conn.prepareStatement(insertData);
 			

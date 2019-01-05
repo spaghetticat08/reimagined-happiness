@@ -65,14 +65,15 @@ public class DataBaseManager implements DataBaseInterface {
 		insertOrder.createInsertOrder(newOrder);
 	}
 	
-	public void getOrders() {
-		try {
-			
-			
-		} catch (Exception e) {}
+	public ResultSet getOrders() {
+		ResultSet rsOrders = null;
+		QueriesDB orderQuery = new QueriesDB();
+		rsOrders = orderQuery.getAllOrders();
+		
+		return rsOrders;
 		
 	}
-	public ResultSet getLeveranciers(DataBaseInterface db) {
+	public ResultSet getLeveranciers() {
 		ResultSet rsLeveranciers = null;
 		QueriesDB LeverancierQuery = new QueriesDB();
 		rsLeveranciers = LeverancierQuery.getAllLeveranciers();
@@ -80,7 +81,7 @@ public class DataBaseManager implements DataBaseInterface {
 		return rsLeveranciers;
 	}
 	
-	public ResultSet getCustomers(DataBaseInterface db) {
+	public ResultSet getCustomers() {
 		ResultSet rsCustomers = null;
 		QueriesDB getCustomerQuery = new QueriesDB();
 		rsCustomers= getCustomerQuery.getAllCustomers();
@@ -94,8 +95,7 @@ public class DataBaseManager implements DataBaseInterface {
 			e.printStackTrace();
 		}*/
 		
-		return rsCustomers;
-		
+		return rsCustomers;	
 	}
 
 	

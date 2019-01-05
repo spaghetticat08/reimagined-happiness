@@ -59,8 +59,8 @@ public class Stichting {
 	}
 	public ArrayList<Klant> getKlanten(Stichting newStichting, DataBaseInterface db) {
 		//ArrayList<Klant> klanten = new ArrayList();
-		newStichting.klanten = new ArrayList();
-		ResultSet rsCustomers=db.getCustomers(db);	
+		newStichting.klanten = new ArrayList<Klant>();
+		ResultSet rsCustomers=db.getCustomers();	
 		
 		try {
 			while (rsCustomers.next()) {
@@ -85,9 +85,9 @@ public class Stichting {
 	}
 	
 	public ArrayList<Leverancier> getLeveranciers(Stichting newStichting, DataBaseInterface db) {
-		    //ArrayList<Klant> klanten = new ArrayList();
-			newStichting.leveranciers = new ArrayList();
-			ResultSet rsLeveranciers=db.getLeveranciers(db);			
+	    //ArrayList<Klant> klanten = new ArrayList();
+		newStichting.leveranciers = new ArrayList<Leverancier>();
+		ResultSet rsLeveranciers=db.getLeveranciers();			
 			try {
 				while (rsLeveranciers.next()) {
 					Leverancier tempLeverancier = new Leverancier(
@@ -101,7 +101,7 @@ public class Stichting {
 						rsLeveranciers.getString("website"), 
 						rsLeveranciers.getString("opmerkingen"), 
 						rsLeveranciers.getInt("gebruikerNummer"));
-						newStichting.leveranciers.add(tempLeverancier);
+					newStichting.leveranciers.add(tempLeverancier);
 						//klanten.add(tempKlant);
 					}
 				} catch (SQLException e) {
@@ -112,7 +112,26 @@ public class Stichting {
 	public void setLeveranciers(ArrayList<Leverancier> leveranciers) {
 		this.leveranciers = leveranciers;
 	}
-	public ArrayList<Order> getOrders() {
+	public ArrayList<Order> getOrders(Stichting newStichting, DataBaseInterface db) {
+		newStichting.orders = new ArrayList<Order>();
+		ResultSet rsOrders = db.getOrders();
+		
+		try {
+			while (rsOrders.next()) {
+				Order tempOrder = new Order(
+						rsOrders.getString("artikel"),
+						rsOrders.getInt("orderNummer"),
+						rsOrders.getString("omschrijving"),
+						rsOrders.getString("datum"),
+						rsOrders.getDouble("prijs"),
+						BetalingsMiddel.valueOf(rsOrders.getString("typeBetaling")),
+						Status.valueOf(rsOrders.getString("orderStatus")),
+						rsOrders.getInt("gebGebruikerNummer"));
+					newStichting.orders.add(tempOrder);
+			}	
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return orders;
 	}
 	public void setOrders(ArrayList<Order> orders) {
