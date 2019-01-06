@@ -10,7 +10,9 @@ import src.Klant;
 public class main {
 	
 	public static void main(String[] args) {
-		Stichting newStichting = new Stichting("Yoga4Life", 10.00);
+		StichtingGegevens xmlGegevens = new StichtingGegevens();
+		String xml = "C:\\Users\\Britt\\eclipse-workspace\\ShowCase\\src\\src\\gegevens.xml";
+		Stichting newStichting = xmlGegevens.readXML(xml);
 		DataBaseInterface db = new DataBaseManager();
 		mainMenu startMainMenu = new mainMenu(newStichting, db);
 		

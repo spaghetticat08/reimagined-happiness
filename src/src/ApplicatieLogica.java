@@ -1,11 +1,17 @@
 package src;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import Interface.DataBaseInterface;
 import db.DataBaseManager;
 
 public class ApplicatieLogica {
+	boolean descendingP = true;
+	boolean descendingN = true;
+	boolean descendingD = true;
+	
 	public void insertKlant(DataBaseInterface db, String klantNaam, String klantAdres, String klantPlaats, String klantEmail, String klantTelefoonNr, String klantOpmerking) {
 		Klant newKlant = new Klant(klantNaam, klantAdres, klantPlaats, klantEmail, klantTelefoonNr, klantOpmerking);	
 		db.insertKlant(newKlant);
@@ -57,5 +63,51 @@ public class ApplicatieLogica {
 		db.deleteOrder(deletedOrder);
 	}
 	
-
+	public ArrayList<Order> sortPrices(Stichting newStichting, DataBaseInterface db){
+		ArrayList<Order> orders = newStichting.getOrders(newStichting, db);
+		if (descendingP == true){
+		Collections.sort(orders, new Comparator<Order>() {
+			@Override
+			public int compare(Order o1, Order o2) {
+				return o1.getPrijs().compareTo(o2.getPrijs());
+			}
+		});
+		descendingP = false;
+		} else {
+			Collections.sort(orders, new Comparator<Order>() {
+				@Override
+				public int compare(Order o1, Order o2) {
+					return o2.getPrijs().compareTo(o1.getPrijs());
+				}
+			});
+			descendingP = true;
+		}
+		return orders;
+	}
+	
+	public ArrayList<Order> sortOrderNumbers(Stichting newStichting, DataBaseInterface db){
+		ArrayList<Order> orders = newStichting.getOrders(newStichting, db);
+		if(descendingN ==true) {
+			Collections.sort(orders, new Comparator<Order>() {
+				@Override
+				public int compare(Order o1, Order o2) {
+					int orderNo1 = o1.getOrdernummer();
+					int orderNo2 = o2.getOrdernummer();
+					return orderNo1 - orderNo2;
+				}
+			});
+			descendingN = false;
+		}else {
+			Collections.sort(orders, new Comparator<Order>() {
+				@Override
+				public int compare(Order o1, Order o2) {
+					int orderNo1 = o1.getOrdernummer();
+					int orderNo2 = o2.getOrdernummer();
+					return orderNo2 - orderNo1;
+				}
+			});
+			descendingN = true;
+		}
+		return orders;
+	}
 }

@@ -108,7 +108,7 @@ public class CustomerList2 {
 		
 		//Make list
 		
-		customerList = new List(customerShell2, SWT.BORDER);
+		customerList = new List(customerShell2, SWT.BORDER | SWT.V_SCROLL);
 		customerList.setBounds(10, 36, 246, 478);
 		
 		String[] listOfCustomerNames = getCustomerNames();
@@ -243,13 +243,10 @@ public class CustomerList2 {
 		String klantEmail = textEmail.getText();
 		String klantTelefoonNr = textTelefoonNr.getText();
 		String klantOpmerking = textOpmerkingen.getText();
+		
+		newLogic.insertKlant(db, klantNaam, klantAdres, klantPlaats, klantEmail, klantTelefoonNr, klantOpmerking);
 		String[] listOfCustomerNames = getCustomerNames();
 		customerList.setItems(listOfCustomerNames);	
-		
-		//is it allowed to create a new object Klant here?
-		//how do we create unique numbers?
-		newLogic.insertKlant(db, klantNaam, klantAdres, klantPlaats, klantEmail, klantTelefoonNr, klantOpmerking);
-		
 		}
 	
 	public void deleteCustomer() {

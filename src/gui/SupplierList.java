@@ -270,8 +270,9 @@ public class SupplierList {
 		String levTelefoonNr = textTelefoonNr.getText();
 		String website = textWebsite.getText();
 		String levOpmerking = textOpmerking.getText();
-		//do this in logic class
+		
 		newLogic.insertLeverancier(db, levNaam, contactPersoon, levAdres, levPlaats, land, levEmail, levTelefoonNr, website, levOpmerking);
+		
 		String[] listOfSupplierNames = getSupplierNames();
 		supplierList.setItems(listOfSupplierNames);
 	}

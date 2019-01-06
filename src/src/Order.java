@@ -1,5 +1,6 @@
 package src;
 
+
 public class Order {
 	private String artikel;
 	private int ordernummer;
@@ -85,4 +86,5 @@ public class Order {
 		return prijs;
 	}
 
+	
 }

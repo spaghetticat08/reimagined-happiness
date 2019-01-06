@@ -11,6 +11,8 @@ import java.awt.Frame;
 import org.eclipse.swt.awt.SWT_AWT;
 import java.awt.Panel;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.awt.BorderLayout;
 import javax.swing.JRootPane;
 import org.eclipse.swt.widgets.Menu;
@@ -44,6 +46,8 @@ public class addOrder {
 	private Text textPrijs;
 	private Text textGebruiker;
 	private Text textOmschrijving;
+	boolean descending = false;
+	
 	String datum;
 	Status orderStatus;
 	BetalingsMiddel betaling;
@@ -63,7 +67,7 @@ public class addOrder {
 		Shell orderShell = new Shell();
 		orderShell.setSize(951, 675);
 		
-		orderTable = new Table(orderShell, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
+		orderTable = new Table(orderShell, SWT.BORDER | SWT.FULL_SELECTION);
 		orderTable.setBounds(56, 68, 765, 296);
 		orderTable.setHeaderVisible(true);
 		orderTable.setLinesVisible(true);
@@ -72,14 +76,32 @@ public class addOrder {
 		TableColumn tblclmnOrderNumber = new TableColumn(orderTable, SWT.NONE);
 		tblclmnOrderNumber.setWidth(151);
 		tblclmnOrderNumber.setText("Ordernummer");
+		tblclmnOrderNumber.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				sortOrderNumbers();
+			}
+		});
 		
 		TableColumn tblclmnDate = new TableColumn(orderTable, SWT.NONE);
 		tblclmnDate.setWidth(100);
 		tblclmnDate.setText("Datum Order");
+		tblclmnDate.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				sortDates();
+			}
+		});
 		
 		TableColumn tblclmnPrice = new TableColumn(orderTable, SWT.NONE);
 		tblclmnPrice.setWidth(100);
 		tblclmnPrice.setText("Bedrag");
+		tblclmnPrice.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				sortOrderPrices();
+			}
+		});
 		
 		loadAllOrders();
 	
@@ -87,9 +109,10 @@ public class addOrder {
 		lblCurrentBalanse.setBounds(639, 37, 94, 25);
 		lblCurrentBalanse.setText("Huidige Balans");
 		
-		Text text = new Text(orderShell, SWT.BORDER);
-		text.setEnabled(false);
-		text.setBounds(740, 34, 81, 25);
+		Text balancetext = new Text(orderShell, SWT.BORDER);
+		balancetext.setEnabled(false);
+		balancetext.setBounds(740, 34, 81, 25);
+		balancetext.setText(String.valueOf(newStichting.getBalans()));
 		
 		Menu menu = new Menu(orderShell, SWT.BAR);
 		orderShell.setMenuBar(menu);
@@ -155,6 +178,7 @@ public class addOrder {
 		label.setBounds(10, 370, 915, 9);
 		
 		textOrdernummer = new Text(orderShell, SWT.BORDER);
+		textOrdernummer.setEnabled(false);
 		textOrdernummer.setBounds(154, 385, 267, 21);
 		
 		Label lblNewLabel = new Label(orderShell, SWT.NONE);
@@ -257,7 +281,7 @@ public class addOrder {
 		btnToevoegen.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				addOrder(comboStatus, comboBetaling);
+				addNewOrder(balancetext, comboStatus, comboBetaling);
 			}
 		});
 		Button datumBtn = new Button(orderShell, SWT.PUSH);
@@ -309,7 +333,7 @@ public class addOrder {
 		}
 	}
 	
-	public void addOrder(Combo comboStatus, Combo comboBetaling) {
+	public void addNewOrder(Text balancetext, Combo comboStatus, Combo comboBetaling) {
 		//int ordernummer = Integer.valueOf(textOrdernummer.getText());
 		String artikel = textArtikel.getText();
 		Double prijs = Double.valueOf(textPrijs.getText());
@@ -318,11 +342,11 @@ public class addOrder {
 		String datum = textDatum.getText();
 		BetalingsMiddel betaling = BetalingsMiddel.valueOf(comboBetaling.getText());
 		Status orderStatus = Status.valueOf(comboStatus.getText());
-		//temp values for enums (to be fixed)
-		
+
 		Order newOrder = new Order(artikel, omschrijving, datum, prijs, betaling, orderStatus, null, null, gebruikerNummer);
 		db.insertOrder(newOrder);
-		//orderTable.clearAll();
+		Double newBalans = newStichting.calculateNewBalance(newOrder, newStichting);
+		balancetext.setText(Double.toString(newBalans));
 		orderTable.removeAll();
 		loadAllOrders();
 	}
@@ -359,4 +383,31 @@ public class addOrder {
 		orderTable.removeAll();
 		loadAllOrders();
 	};
+	
+	public void sortOrderPrices() {
+		//ArrayList<Order> orders = newStichting.getOrders(newStichting, db);
+		ArrayList<Order> sortedOrders = newLogic.sortPrices(newStichting, db);
+		orderTable.removeAll();
+		for (Order order:sortedOrders) {
+			TableItem newItem = new TableItem(orderTable, SWT.NONE);
+			String[] tableItems = new String[] {Integer.toString(order.getOrdernummer()), order.getDatum(), Double.toString(order.getPrijs())};
+			newItem.setText(tableItems);
+		}
+	}
+	
+	public void sortOrderNumbers() {
+		ArrayList<Order> sortedOrders = newLogic.sortOrderNumbers(newStichting, db);
+		orderTable.removeAll();
+		for (Order order:sortedOrders) {
+			TableItem newItem = new TableItem(orderTable, SWT.NONE);
+			String[] tableItems = new String[] {Integer.toString(order.getOrdernummer()), order.getDatum(), Double.toString(order.getPrijs())};
+			newItem.setText(tableItems);
+		}
+	}
+	
+	public void sortDates() {
+		
+		
+	}
+	
 }

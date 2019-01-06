@@ -20,7 +20,7 @@ public class Stichting {
 		this.balans = balans;
 	}
 	
-	//public Stichting() {}
+	public Stichting() {}
 	
 	public String[] customerNames(Stichting newStichting, DataBaseInterface db){
 		this.db = db;
@@ -54,8 +54,13 @@ public class Stichting {
 	public Double getBalans() {
 		return balans;
 	}
-	public void setBalans(Double balans) {
+	public void setBalans(Double balans, Stichting newStichting) {
 		this.balans = balans;
+		StichtingGegevens updateGegevens = new StichtingGegevens();
+		String xml = "C:\\Users\\Britt\\eclipse-workspace\\ShowCase\\src\\src\\gegevens.xml";
+		String stichtingNaam = newStichting.getStichtingNaam();
+		updateGegevens.saveToXML(xml, stichtingNaam, Double.toString(balans));
+		
 	}
 	public ArrayList<Klant> getKlanten(Stichting newStichting, DataBaseInterface db) {
 		//ArrayList<Klant> klanten = new ArrayList();
@@ -138,6 +143,14 @@ public class Stichting {
 		this.orders = orders;
 	};
 	
+	public double calculateNewBalance(Order newOrder, Stichting newStichting) {
+		Double newBalans;
+		newBalans = balans + newOrder.getPrijs();
+		newStichting.setBalans(newBalans, newStichting);
+		//setBalans(newBalans);
+		return newBalans;
+		
+	}
 	
 	/*public ArrayList<String> getAllCustomerNames(Stichting newStichting, DataBaseManager db) {
 		ResultSet rs=null;
