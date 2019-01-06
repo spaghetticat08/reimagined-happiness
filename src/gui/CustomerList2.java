@@ -64,16 +64,28 @@ public class CustomerList2 {
 		
 		MenuItem mntmAdministratieoverzicht = new MenuItem(menu_1, SWT.RADIO);
 		mntmAdministratieoverzicht.setText("Administratie-overzicht");
-		
+		mntmAdministratieoverzicht.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				customerShell2.dispose();
+				addOrder startOrderMenu = new addOrder(newStichting, db);
+			}
+		});
 		new MenuItem(menu_1, SWT.SEPARATOR);
 		
 		MenuItem mntmNewRadiobutton = new MenuItem(menu_1, SWT.RADIO);
-		mntmNewRadiobutton.setText("Leveranciers");
-		
+		mntmNewRadiobutton.setText("Leverancieroverzicht");
+		mntmNewRadiobutton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				customerShell2.dispose();
+				SupplierList startSupplierMenu = new SupplierList(newStichting, db);
+			}
+		});
 		new MenuItem(menu_1, SWT.SEPARATOR);
 		
 		MenuItem mntmNewRadiobutton_1 = new MenuItem(menu_1, SWT.RADIO);
-		mntmNewRadiobutton_1.setText("Klanten");
+		mntmNewRadiobutton_1.setSelection(true);
+		mntmNewRadiobutton_1.setText("Klantenoverzicht");
+		
 		
 		MenuItem mntmNewSubmenu_1 = new MenuItem(menu, SWT.CASCADE);
 		mntmNewSubmenu_1.setText("Actie...");
@@ -178,11 +190,13 @@ public class CustomerList2 {
 		btnVerwijderen.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				//TODO: remove selected from database
+				//TODO: make pop up for verification
+				deleteCustomer();
+				
 			}
 		});
 		
-		Button btnLeegmaken = new Button(customerShell2, SWT.NONE);
+		/*Button btnLeegmaken = new Button(customerShell2, SWT.NONE);
 		btnLeegmaken.setText("Leegmaken");
 		btnLeegmaken.setBounds(607, 489, 101, 25);
 		btnLeegmaken.addListener(SWT.Selection, new Listener() {
@@ -191,6 +205,7 @@ public class CustomerList2 {
 				//TODO: clear all boxes from text
 			}
 		});
+		*/
 		
 		customerShell2.open();
 		customerShell2.layout();
@@ -228,10 +243,21 @@ public class CustomerList2 {
 		String klantEmail = textEmail.getText();
 		String klantTelefoonNr = textTelefoonNr.getText();
 		String klantOpmerking = textOpmerkingen.getText();
+		String[] listOfCustomerNames = getCustomerNames();
+		customerList.setItems(listOfCustomerNames);	
 		
 		//is it allowed to create a new object Klant here?
 		//how do we create unique numbers?
 		newLogic.insertKlant(db, klantNaam, klantAdres, klantPlaats, klantEmail, klantTelefoonNr, klantOpmerking);
 		
+		}
+	
+	public void deleteCustomer() {
+		int indexNo = customerList.getFocusIndex();
+		newLogic.prepKlantForDelete(indexNo, newStichting, db);
+		customerList.removeAll();
+		//TODO: maybe make a seperate function for reloading the list as this happens throughout several times
+		String[] listOfCustomerNames = getCustomerNames();
+		customerList.setItems(listOfCustomerNames);	
 	}
 	}

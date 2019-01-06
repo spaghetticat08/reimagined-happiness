@@ -9,7 +9,7 @@ import java.sql.Statement;
 import src.Klant;
 import src.typeGebruiker;
 
-public class QueriesDB {
+public class ReadDB {
 	private Connection conn = null;
 	private Statement stmt = null;
 	private ResultSet rs;
@@ -21,7 +21,7 @@ public class QueriesDB {
 	final String PASS = "";
 	 
 	
-	public QueriesDB() {}	
+	public ReadDB() {}	
 		
 	public ResultSet getAllOrders() {
 		ResultSet rs = null;

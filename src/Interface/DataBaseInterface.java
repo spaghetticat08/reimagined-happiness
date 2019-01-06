@@ -14,6 +14,10 @@ public interface DataBaseInterface {
 	void insertLeverancier(Leverancier newLev);
 	void insertOrder(Order newOrder);
 	
+	void deleteKlant(Klant deletedKlant);
+	void deleteLeverancier(Leverancier deletedLev);
+	void deleteOrder(Order deletedOrder);
+	
 	ResultSet getOrders();
 	ResultSet getLeveranciers();
 	ResultSet getCustomers();

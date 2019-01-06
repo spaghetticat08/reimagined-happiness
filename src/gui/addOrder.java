@@ -22,9 +22,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
+
 import Interface.DataBaseInterface;
 import db.DataBaseManager;
-import db.QueriesDB;
+import db.ReadDB;
 import src.ApplicatieLogica;
 import src.BetalingsMiddel;
 import src.Leverancier;
@@ -100,17 +101,31 @@ public class addOrder {
 		mntmNewSubmenu.setMenu(menu_1);
 		
 		MenuItem mntmAdministratieoverzicht = new MenuItem(menu_1, SWT.RADIO);
+		mntmAdministratieoverzicht.setSelection(true);
 		mntmAdministratieoverzicht.setText("Administratie-overzicht");
 		
 		new MenuItem(menu_1, SWT.SEPARATOR);
 		
 		MenuItem mntmNewRadiobutton = new MenuItem(menu_1, SWT.RADIO);
-		mntmNewRadiobutton.setText("Leveranciers");
+		mntmNewRadiobutton.setText("Leverancieroverzicht");
+		mntmNewRadiobutton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				orderShell.dispose();
+				SupplierList startSupplierMenu = new SupplierList(newStichting, db);
+			}
+		});
 		
 		new MenuItem(menu_1, SWT.SEPARATOR);
 		
 		MenuItem mntmNewRadiobutton_1 = new MenuItem(menu_1, SWT.RADIO);
-		mntmNewRadiobutton_1.setText("Klanten");
+		mntmNewRadiobutton_1.setText("Klantenoverzicht");
+		mntmNewRadiobutton_1.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				orderShell.dispose();
+				CustomerList2 startCustomerMenu = new CustomerList2(newStichting, db);
+			}
+		});
+
 		
 		MenuItem mntmNewSubmenu_1 = new MenuItem(menu, SWT.CASCADE);
 		mntmNewSubmenu_1.setText("Actie...");
@@ -201,18 +216,18 @@ public class addOrder {
 		btnVerwijderen.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				// TODO Auto-generated method stub
+				deleteOrder();
 			}
 		});
-		Button btnLeegmaken = new Button(orderShell, SWT.NONE);
-		btnLeegmaken.setText("Opslaan");
+		/*Button btnLeegmaken = new Button(orderShell, SWT.NONE);
+		btnLeegmaken.setText("Leegmaken");
 		btnLeegmaken.setBounds(527, 581, 94, 25);
 		btnLeegmaken.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
 				// TODO Auto-generated method stub
 			}
-		});
+		});*/
 		
 		Combo comboBetaling = new Combo(orderShell, SWT.READ_ONLY);
 		//TODO: It would be nice if we can automatically iterate through the enum and add all items for future changes
@@ -307,6 +322,9 @@ public class addOrder {
 		
 		Order newOrder = new Order(artikel, omschrijving, datum, prijs, betaling, orderStatus, null, null, gebruikerNummer);
 		db.insertOrder(newOrder);
+		//orderTable.clearAll();
+		orderTable.removeAll();
+		loadAllOrders();
 	}
 	
 	public void loadAllOrders() {
@@ -331,7 +349,14 @@ public class addOrder {
 		comboStatus.setText(infoOrder.getOrderStatus().toString());
 		comboBetaling.setText(infoOrder.getTypeBetaling().toString());
 		//(infoOrder.getOrderStatus());
-		//comboBetaling
-		
+		//comboBetaling	
 	}
+	
+	public void deleteOrder() {
+		int indexNo = orderTable.getSelectionIndex();
+		newLogic.prepOrderForDelete(indexNo, newStichting, db);
+		//TODO: refresh list after deletion
+		orderTable.removeAll();
+		loadAllOrders();
+	};
 }

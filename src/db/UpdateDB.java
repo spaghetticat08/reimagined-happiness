@@ -9,7 +9,7 @@ import src.Klant;
 import src.Leverancier;
 import src.Order;
 
-public class InsertDataDB {
+public class UpdateDB {
 	String JDBC_DRIVER =  "org.h2.Driver";
 	String DB_URL = "jdbc:h2:~/ShowCaseDB";
 	//DB credentials
@@ -19,7 +19,7 @@ public class InsertDataDB {
 	private Connection conn = null;
 	private Statement stmt = null;
 	private String insertData;	
-	public InsertDataDB() {}
+	public UpdateDB() {}
 	
 	public void createInsertKlant(Klant obj) {
 		
@@ -33,11 +33,9 @@ public class InsertDataDB {
 					"VALUES('"+obj.getKlantNaam()+ "', "+"'"+obj.getKlantAdres()+"', "+" '"+obj.getKlantPlaats()+"', "+" '"+obj.getKlantEmailadres()+"', "+" '"+obj.getKlantTelefoonnummer()+"', "+" '', "+" '', "+" '"+obj.getKlantOpmerking()+"', "+" 'Klant' )";
 			
 			PreparedStatement ps = conn.prepareStatement(insertData);
-			
 			//execute statement
 			ps.executeUpdate();
 			System.out.println("Insertion successfull!");
-			
 			//clean up everything
 			//stmt.close();
 			//conn.close();
@@ -55,7 +53,6 @@ public class InsertDataDB {
 			} catch(SQLException se) {
 				se.printStackTrace();
 			}
-		
 	}	
 	}
 	

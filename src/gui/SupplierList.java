@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Listener;
 public class SupplierList {
 	Stichting newStichting;
 	DataBaseInterface db;
-	ApplicatieLogica newLevLogic = new ApplicatieLogica();
+	ApplicatieLogica newLogic = new ApplicatieLogica();
 	
 	private  Text textNaam;
 	private  Text textAdres;
@@ -75,16 +75,31 @@ public class SupplierList {
 		
 		MenuItem mntmAdministratieoverzicht = new MenuItem(menu_1, SWT.RADIO);
 		mntmAdministratieoverzicht.setText("Administratie-overzicht");
+		mntmAdministratieoverzicht.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				supplierShell.dispose();
+				addOrder startOrderMenu = new addOrder(newStichting, db);
+			}
+		});
 		
 		new MenuItem(menu_1, SWT.SEPARATOR);
 		
 		MenuItem mntmNewRadiobutton = new MenuItem(menu_1, SWT.RADIO);
-		mntmNewRadiobutton.setText("Leveranciers");
+		mntmNewRadiobutton.setSelection(true);
+		mntmNewRadiobutton.setText("Leverancieroverzicht");
 		
 		new MenuItem(menu_1, SWT.SEPARATOR);
 		
 		MenuItem mntmNewRadiobutton_1 = new MenuItem(menu_1, SWT.RADIO);
 		mntmNewRadiobutton_1.setText("Klanten");
+		mntmNewRadiobutton_1.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				supplierShell.dispose();
+				CustomerList2 startCustomerMenu = new CustomerList2(newStichting, db);
+				
+			}
+		});
 		
 		MenuItem mntmNewSubmenu_1 = new MenuItem(menu, SWT.CASCADE);
 		mntmNewSubmenu_1.setText("Actie...");
@@ -194,7 +209,6 @@ public class SupplierList {
 		btnToevoegen.setText("Toevoegen...");
 		btnToevoegen.setBounds(283, 490, 101, 25);
 		btnToevoegen.addListener(SWT.Selection, new Listener() {
-
 			@Override
 			public void handleEvent(Event event) {
 				addSupplier();
@@ -204,10 +218,18 @@ public class SupplierList {
 		Button btnVerwijderen = new Button(supplierShell, SWT.NONE);
 		btnVerwijderen.setText("Verwijderen");
 		btnVerwijderen.setBounds(500, 490, 101, 25);
+		btnVerwijderen.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				deleteSupplier();
+			supplierShell.requestLayout();
+			}
+		});
 		
-		Button btnLeegmaken = new Button(supplierShell, SWT.NONE);
+		/*Button btnLeegmaken = new Button(supplierShell, SWT.NONE);
 		btnLeegmaken.setText("Leegmaken");
 		btnLeegmaken.setBounds(607, 490, 101, 25);
+		*/
 		
 		supplierShell.open();
 		supplierShell.layout();
@@ -226,7 +248,7 @@ public class SupplierList {
 
 	public void onListItemSelect(List supplierList) {
 		int indexNo = supplierList.getFocusIndex();
-		Leverancier infoLev = newLevLogic.getLevInfo(indexNo, newStichting, db);
+		Leverancier infoLev = newLogic.getLevInfo(indexNo, newStichting, db);
 		textNaam.setText(infoLev.getLeverancierNaam());
 		textContact.setText(infoLev.getContactPersoon());
 		textAdres.setText(infoLev.getLeverancierAdres());
@@ -249,6 +271,17 @@ public class SupplierList {
 		String website = textWebsite.getText();
 		String levOpmerking = textOpmerking.getText();
 		//do this in logic class
-		newLevLogic.insertLeverancier(db, levNaam, contactPersoon, levAdres, levPlaats, land, levEmail, levTelefoonNr, website, levOpmerking);
+		newLogic.insertLeverancier(db, levNaam, contactPersoon, levAdres, levPlaats, land, levEmail, levTelefoonNr, website, levOpmerking);
+		String[] listOfSupplierNames = getSupplierNames();
+		supplierList.setItems(listOfSupplierNames);
+	}
+	public void deleteSupplier() {
+		int indexNo = supplierList.getFocusIndex();
+		newLogic.prepLevForDelete(indexNo, newStichting, db);
+		//TODO: refresh supplierlist
+		String[] listOfSupplierNames = getSupplierNames();
+		supplierList.setItems(listOfSupplierNames);
+		
+		
 	}
 }

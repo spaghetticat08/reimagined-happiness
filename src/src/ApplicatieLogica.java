@@ -16,10 +16,6 @@ public class ApplicatieLogica {
 		db.insertLeverancier(newLev);
 	}
 	
-	public void insertOrder() {
-		
-	}
-	
 	public void disposeAndCreateDB() {
 		DataBaseInterface resetDB = new DataBaseManager();
 		resetDB.createDatabase();
@@ -41,6 +37,24 @@ public class ApplicatieLogica {
 		ArrayList<Leverancier> leveranciers = newStichting.getLeveranciers(newStichting, db);
 		Leverancier infoLev = leveranciers.get(indexNo);	
 		return infoLev;
+	}
+	
+	public void prepKlantForDelete(int indexNo, Stichting newStichting, DataBaseInterface db) {
+		ArrayList<Klant> klanten = newStichting.getKlanten(newStichting, db);
+		Klant deletedKlant = klanten.get(indexNo);
+		db.deleteKlant(deletedKlant);
+	}
+	
+	public void prepLevForDelete(int indexNo, Stichting newStichting, DataBaseInterface db) {
+		ArrayList<Leverancier> leveranciers = newStichting.getLeveranciers(newStichting, db);
+		Leverancier deletedLev = leveranciers.get(indexNo);
+		db.deleteLeverancier(deletedLev);
+	}
+	
+	public void prepOrderForDelete(int indexNo, Stichting newStichting, DataBaseInterface db) {
+		ArrayList<Order> orders = newStichting.getOrders(newStichting, db);
+		Order deletedOrder = orders.get(indexNo);
+		db.deleteOrder(deletedOrder);
 	}
 	
 
