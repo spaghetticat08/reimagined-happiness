@@ -30,6 +30,7 @@ import db.DataBaseManager;
 import db.ReadDB;
 import src.ApplicatieLogica;
 import src.BetalingsMiddel;
+import src.Klant;
 import src.Leverancier;
 import src.Order;
 import src.Status;
@@ -39,12 +40,13 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.graphics.Point;
 public class addOrder {
 	private  Table orderTable;
 	private Text textOrdernummer;
 	private Text textArtikel;
 	private Text textPrijs;
-	private Text textGebruiker;
+	private Combo textGebruiker;
 	private Text textOmschrijving;
 	boolean descending = false;
 	
@@ -103,6 +105,7 @@ public class addOrder {
 			}
 		});
 		
+		//Load all orders in the table
 		loadAllOrders();
 	
 		Label lblCurrentBalanse = new Label(orderShell, SWT.NONE);
@@ -207,9 +210,12 @@ public class addOrder {
 		lblNewLabel_4.setBounds(56, 548, 92, 15);
 		lblNewLabel_4.setText("Betalingsmiddel");
 		
-		textGebruiker = new Text(orderShell, SWT.BORDER);
-		textGebruiker.setBounds(154, 491, 267, 21);
-		
+		textGebruiker = new Combo(orderShell, SWT.READ_ONLY);
+		textGebruiker.setToolTipText("");
+		textGebruiker.setBounds(154, 489, 267, 21);
+		String[] listGebruikers = getGebruikers(); 
+		textGebruiker.setItems(listGebruikers);
+				
 		textOmschrijving = new Text(orderShell, SWT.BORDER);
 		textOmschrijving.setBounds(554, 385, 267, 154);
 		
@@ -281,7 +287,7 @@ public class addOrder {
 		btnToevoegen.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				addNewOrder(balancetext, comboStatus, comboBetaling);
+				addNewOrder(balancetext, comboStatus, comboBetaling, textGebruiker);
 			}
 		});
 		Button datumBtn = new Button(orderShell, SWT.PUSH);
@@ -333,7 +339,7 @@ public class addOrder {
 		}
 	}
 	
-	public void addNewOrder(Text balancetext, Combo comboStatus, Combo comboBetaling) {
+	public void addNewOrder(Text balancetext, Combo comboStatus, Combo comboBetaling, Combo textGebruiker) {
 		//int ordernummer = Integer.valueOf(textOrdernummer.getText());
 		String artikel = textArtikel.getText();
 		Double prijs = Double.valueOf(textPrijs.getText());
@@ -343,9 +349,8 @@ public class addOrder {
 		BetalingsMiddel betaling = BetalingsMiddel.valueOf(comboBetaling.getText());
 		Status orderStatus = Status.valueOf(comboStatus.getText());
 
-		Order newOrder = new Order(artikel, omschrijving, datum, prijs, betaling, orderStatus, null, null, gebruikerNummer);
-		db.insertOrder(newOrder);
-		Double newBalans = newStichting.calculateNewBalance(newOrder, newStichting);
+		newLogic.insertOrder(db, artikel, omschrijving, datum, prijs, betaling, orderStatus, leverancierNaam, klantNaam, gebruikerNummer);
+		Double newBalans = newStichting.calculateNewBalance(prijs, newStichting);
 		balancetext.setText(Double.toString(newBalans));
 		orderTable.removeAll();
 		loadAllOrders();
@@ -364,16 +369,19 @@ public class addOrder {
 		int indexNo = orderTable.getSelectionIndex();
 		System.out.println(indexNo);
 		Order infoOrder = newLogic.getOrderInfo(indexNo, newStichting, db);
+		
 		textOrdernummer.setText(Integer.toString(infoOrder.getOrdernummer()));
 		textArtikel.setText(infoOrder.getArtikel());
 		textPrijs.setText(Double.toString(infoOrder.getPrijs()));
-		textGebruiker.setText(Integer.toString(infoOrder.getGebruikerNummer()));
 		textOmschrijving.setText(infoOrder.getOmschrijving());
 		System.out.println(infoOrder.getOrderStatus().toString());
 		comboStatus.setText(infoOrder.getOrderStatus().toString());
 		comboBetaling.setText(infoOrder.getTypeBetaling().toString());
-		//(infoOrder.getOrderStatus());
-		//comboBetaling	
+		textGebruiker.setText(infoOrder.getKlantNaam().getKlantNaam());
+		
+		Klant klant = infoOrder.getKlantNaam();
+		Leverancier lev = infoOrder.getLeverancierNaam();
+		
 	}
 	
 	public void deleteOrder() {
@@ -405,9 +413,12 @@ public class addOrder {
 		}
 	}
 	
+	public String[] getGebruikers() {
+		String [] listofGebruikers = newStichting.getGebruikers(newStichting, db);
+		return listofGebruikers;
+	}
+	
 	public void sortDates() {
-		
-		
 	}
 	
 }

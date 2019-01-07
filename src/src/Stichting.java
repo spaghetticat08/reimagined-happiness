@@ -3,6 +3,8 @@ package src;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 import db.DataBaseManager;
 import Interface.DataBaseInterface;
@@ -22,10 +24,9 @@ public class Stichting {
 	
 	public Stichting() {}
 	
-	public String[] customerNames(Stichting newStichting, DataBaseInterface db){
+	public String[] getCustomerNames(Stichting newStichting, DataBaseInterface db){
 		this.db = db;
 		newStichting.getKlanten(newStichting, db);
-		int arraySize = klanten.size();
 		String[] listOfCustomerNames = new String[klanten.size()];
 		int i=0;
 		for (Klant klant: klanten) {
@@ -35,9 +36,8 @@ public class Stichting {
 		return listOfCustomerNames;
 	}
 	
-	public String[] leverancierNames(Stichting newStichting, DataBaseInterface db) {
+	public String[] getLeverancierNames(Stichting newStichting, DataBaseInterface db) {
 		newStichting.getLeveranciers(newStichting, db);
-		int arraySize = leveranciers.size();
 		String[] listOfLeverancierNames = new String[leveranciers.size()];
 		int i=0;
 		for (Leverancier leverancier:leveranciers) {
@@ -119,7 +119,38 @@ public class Stichting {
 	}
 	public ArrayList<Order> getOrders(Stichting newStichting, DataBaseInterface db) {
 		newStichting.orders = new ArrayList<Order>();
-		ResultSet rsOrders = db.getOrders();
+		newStichting.klanten = getKlanten(newStichting, db);
+		newStichting.leveranciers = getLeveranciers(newStichting, db);
+		ResultSet rsOrders = db.getOrders();	
+		try {
+			while (rsOrders.next()) {
+				Order tempOrder = new Order(
+						rsOrders.getString("artikel"),
+						rsOrders.getInt("orderNummer"),
+						rsOrders.getString("omschrijving"),
+						rsOrders.getString("datum"),
+						rsOrders.getDouble("prijs"),
+						BetalingsMiddel.valueOf(rsOrders.getString("typeBetaling")),
+						Status.valueOf(rsOrders.getString("orderStatus")),
+						null,
+						null,
+						rsOrders.getInt("gebGebruikerNummer"));
+				for (Klant k: klanten ) {
+					if(k.getGebruikerNummer() == tempOrder.getGebruikerNummer()) {
+						tempOrder.setKlantNaam(k);
+					}
+				}
+				for (Leverancier l:leveranciers) {
+					if (l.getGebruikerNummer()== tempOrder.getGebruikerNummer()) {
+						tempOrder.setLeverancierNaam(l);
+					}
+				}
+					newStichting.orders.add(tempOrder);
+			}	
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		/*
 		
 		try {
 			while (rsOrders.next()) {
@@ -134,44 +165,38 @@ public class Stichting {
 						rsOrders.getInt("gebGebruikerNummer"));
 					newStichting.orders.add(tempOrder);
 			}	
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}*/
 		return orders;
 	}
 	public void setOrders(ArrayList<Order> orders) {
 		this.orders = orders;
 	};
 	
-	public double calculateNewBalance(Order newOrder, Stichting newStichting) {
+	public double calculateNewBalance(Double prijs, Stichting newStichting) {
 		Double newBalans;
-		newBalans = balans + newOrder.getPrijs();
+		newBalans = balans + prijs;
 		newStichting.setBalans(newBalans, newStichting);
 		//setBalans(newBalans);
 		return newBalans;
 		
 	}
-	
-	/*public ArrayList<String> getAllCustomerNames(Stichting newStichting, DataBaseManager db) {
-		ResultSet rs=null;
-		ArrayList<Klant> klanten = new ArrayList<>();
+
+	public String[] getGebruikers(Stichting newStichting, DataBaseInterface db) {
+		String[] allCustomers = newStichting.getCustomerNames(newStichting, db);
+		String[] allSuppliers = newStichting.getLeverancierNames(newStichting, db);
 		
-		// give the databasemanager the task to request query
-		rs = DataBaseManager.getListOfCustomers();
-		
-		try {
-			while (rs.next()) {
-				Klant tempKlant = new Klant(rs.getString("naam"), rs.getString("adres"), rs.getString("plaats"), rs.getString("emailadres"), rs.getString("telefoonnummer"), rs.getString("opmerkingen"), rs.getInt("gebruikerNummer"), typeGebruiker.valueOf(rs.getString("typeGebruiker")));
-			}
-			
-		} catch(Exception e) {}
-		String[] customerNames = new String[klanten.size()];
-		
-		for(int i=0; i<klanten.size();i++) {
-			customerNames[i] = klanten.get(0);
-					
+		String[] both = new String[allCustomers.length+allSuppliers.length];
+		int index = allCustomers.length;
+		for (int i=0; i<allCustomers.length; i++) {
+			both[i] = allCustomers[i];
 		}
-		return customerNames;
-}
-	*/
+		for (int i=0; i<allSuppliers.length; i++) {
+			both[i+ index]= allSuppliers[i];
+		}
+		return both;
+	}
+
 }

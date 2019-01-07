@@ -31,6 +31,7 @@ public class CustomerList2 {
 	private Text textPlaats;
 	private Text textEmail;
 	private Text textTelefoonNr;
+	private Text textGebNr;
 	private Text textOpmerkingen;
 	
 	private ArrayList<Klant> klantinfo;
@@ -39,6 +40,7 @@ public class CustomerList2 {
 	Stichting newStichting;
 	DataBaseInterface db;
 	private List customerList;
+	
 	/**
 	 * Launch the application.
 	 * @param args
@@ -187,6 +189,14 @@ public class CustomerList2 {
 		Button btnVerwijderen = new Button(customerShell2, SWT.NONE);
 		btnVerwijderen.setText("Verwijderen");
 		btnVerwijderen.setBounds(500, 489, 101, 25);
+		
+		textGebNr = new Text(customerShell2, SWT.BORDER);
+		textGebNr.setEditable(false);
+		textGebNr.setBounds(393, 423, 144, 21);
+		
+		Label lblGebruikernummer = new Label(customerShell2, SWT.NONE);
+		lblGebruikernummer.setText("Gebruikernummer");
+		lblGebruikernummer.setBounds(283, 429, 110, 15);
 		btnVerwijderen.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
@@ -218,7 +228,7 @@ public class CustomerList2 {
 
 	public String[] getCustomerNames() {
 		//create a query to get the whole list of customers and return only the names
-		String[] listOfCustomerNames = newStichting.customerNames(newStichting, db);
+		String[] listOfCustomerNames = newStichting.getCustomerNames(newStichting, db);
 		return listOfCustomerNames;
 	}
 	
@@ -233,6 +243,7 @@ public class CustomerList2 {
 		textEmail.setText(infoKlant.getKlantEmailadres());
 		textTelefoonNr.setText(infoKlant.getKlantTelefoonnummer());
 		textOpmerkingen.setText(infoKlant.getKlantOpmerking());
+		textGebNr.setText(Integer.toString(infoKlant.getGebruikerNummer()));
 	}
 	
 	//TODO: make checks for required fields and auto-generate GebruikerNummer

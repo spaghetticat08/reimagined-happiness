@@ -47,6 +47,7 @@ public class SupplierList {
 	private Text textContact;
 	private Text textWebsite;
 	private Text textLand;
+	private Text textGebNr;
 	
 	/**
 	 * Launch the application.
@@ -157,21 +158,21 @@ public class SupplierList {
 		lblNewLabel_2.setText("Plaats");
 		
 		Label lblEmailadres = new Label(supplierShell, SWT.NONE);
-		lblEmailadres.setBounds(283, 204, 76, 15);
+		lblEmailadres.setBounds(283, 191, 76, 15);
 		lblEmailadres.setText("E-mailadres");
 		
 		textPlaats = new Text(supplierShell, SWT.BORDER);
 		textPlaats.setBounds(393, 120, 144, 21);
 		
 		textEmail = new Text(supplierShell, SWT.BORDER);
-		textEmail.setBounds(393, 201, 205, 21);
+		textEmail.setBounds(393, 188, 205, 21);
 		
 		Label lblTelefoonnummer = new Label(supplierShell, SWT.NONE);
-		lblTelefoonnummer.setBounds(283, 231, 110, 15);
+		lblTelefoonnummer.setBounds(283, 216, 110, 15);
 		lblTelefoonnummer.setText("Telefoonnummer");
 		
 		textTelefoonNr = new Text(supplierShell, SWT.BORDER);
-		textTelefoonNr.setBounds(393, 228, 144, 21);
+		textTelefoonNr.setBounds(393, 213, 144, 21);
 		
 		Label lblOpmerkingen = new Label(supplierShell, SWT.NONE);
 		lblOpmerkingen.setBounds(283, 312, 88, 15);
@@ -192,18 +193,26 @@ public class SupplierList {
 		lblContactpersoon.setBounds(283, 69, 110, 15);
 		
 		textWebsite = new Text(supplierShell, SWT.BORDER);
-		textWebsite.setBounds(393, 255, 144, 21);
+		textWebsite.setBounds(393, 237, 144, 21);
 		
 		Label lblWebsite = new Label(supplierShell, SWT.NONE);
 		lblWebsite.setText("Website");
-		lblWebsite.setBounds(283, 258, 55, 15);
+		lblWebsite.setBounds(283, 237, 55, 15);
 		
 		textLand = new Text(supplierShell, SWT.BORDER);
 		textLand.setBounds(393, 147, 144, 21);
 		
+		textGebNr = new Text(supplierShell, SWT.BORDER);
+		textGebNr.setEditable(false);
+		textGebNr.setBounds(393, 264, 144, 21);
+		
 		Label lblLand = new Label(supplierShell, SWT.NONE);
 		lblLand.setText("Land (Invullen \r\nindien niet NL)");
-		lblLand.setBounds(283, 150, 88, 46);
+		lblLand.setBounds(283, 150, 88, 38);
+		
+		Label lblGebruikernummer = new Label(supplierShell, SWT.NONE);
+		lblGebruikernummer.setText("Gebruikernummer");
+		lblGebruikernummer.setBounds(283, 267, 110, 15);
 		
 		Button btnToevoegen = new Button(supplierShell, SWT.NONE);
 		btnToevoegen.setText("Toevoegen...");
@@ -242,7 +251,7 @@ public class SupplierList {
 	
 	public String[] getSupplierNames() {
 		//create a query to get the whole list of customers and return only the names
-		String[] listOfSupplierNames = newStichting.leverancierNames(newStichting, db);
+		String[] listOfSupplierNames = newStichting.getLeverancierNames(newStichting, db);
 		return listOfSupplierNames;
 	}
 
@@ -258,6 +267,7 @@ public class SupplierList {
 		textTelefoonNr.setText(infoLev.getLeverancierTelNr());
 		textWebsite.setText(infoLev.getWebsite());
 		textOpmerking.setText(infoLev.getLeverancierOpmerking());
+		textGebNr.setText(Integer.toString(infoLev.getGebruikerNummer()));
 	}
 	
 	public void addSupplier() {

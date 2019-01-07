@@ -36,8 +36,28 @@ public class Order {
 		this.orderStatus = orderStatus;
 		this.gebruikerNummer = gebruikerNummer;
 	}
-
 	
+	public Order(String artikel, int ordernummer, String omschrijving, String datum, Double prijs,BetalingsMiddel typeBetaling, Status orderStatus, Leverancier leverancierNaam, Klant klantNaam, int gebruikerNummer ) {
+		this.artikel = artikel;
+		this.omschrijving = omschrijving;
+		this.ordernummer = ordernummer;
+		this.datum = datum;
+		this.prijs = prijs;
+		this.typeBetaling = typeBetaling;
+		this.orderStatus = orderStatus;
+		this.leverancierNaam = leverancierNaam;
+		this.klantNaam = klantNaam;
+		this.gebruikerNummer = gebruikerNummer;
+	}
+	
+	public void setLeverancierNaam(Leverancier leverancierNaam) {
+		this.leverancierNaam = leverancierNaam;
+	}
+
+	public void setKlantNaam(Klant klantNaam) {
+		this.klantNaam = klantNaam;
+	}
+
 	public int getGebruikerNummer() {
 		return gebruikerNummer;
 	}
@@ -66,6 +86,7 @@ public class Order {
 	}
 
 	public Klant getKlantNaam() {
+		
 		return klantNaam;
 	}
 

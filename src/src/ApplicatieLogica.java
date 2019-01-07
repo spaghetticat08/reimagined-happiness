@@ -22,6 +22,10 @@ public class ApplicatieLogica {
 		db.insertLeverancier(newLev);
 	}
 	
+	public void insertOrder(DataBaseInterface db, String artikel, String omschrijving, String datum, Double prijs,BetalingsMiddel typeBetaling, Status orderStatus, Leverancier leverancierNaam, Klant klantNaam, int gebruikerNummer ) {
+		Order newOrder = new Order(artikel, omschrijving, datum, prijs, typeBetaling, orderStatus, leverancierNaam, klantNaam, gebruikerNummer);
+		db.insertOrder(newOrder);
+	}
 	public void disposeAndCreateDB() {
 		DataBaseInterface resetDB = new DataBaseManager();
 		resetDB.createDatabase();
@@ -31,6 +35,20 @@ public class ApplicatieLogica {
 		ArrayList<Order> orders = newStichting.getOrders(newStichting, db);
 		Order infoOrder = orders.get(indexNo);
 		return infoOrder;
+	}
+	
+	public String getGebruikerbyNummer(Order order) {
+		Order tempOrder = order;
+		String guiName;
+		if(tempOrder.getKlantNaam()==null) {
+			Leverancier tempLev;
+			guiName = tempOrder.getLeverancierNaam().getLeverancierNaam();
+		} else {
+			Klant tempKlant;
+			guiName = tempOrder.getKlantNaam().getKlantNaam();
+		}
+		
+		return guiName;
 	}
 
 	public Klant getKlantInfo(int indexNo, Stichting newStichting, DataBaseInterface db) {
