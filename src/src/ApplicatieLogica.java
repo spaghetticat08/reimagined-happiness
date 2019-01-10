@@ -22,9 +22,24 @@ public class ApplicatieLogica {
 		db.insertLeverancier(newLev);
 	}
 	
-	public void insertOrder(DataBaseInterface db, String artikel, String omschrijving, String datum, Double prijs,BetalingsMiddel typeBetaling, Status orderStatus, Leverancier leverancierNaam, Klant klantNaam, int gebruikerNummer ) {
-		Order newOrder = new Order(artikel, omschrijving, datum, prijs, typeBetaling, orderStatus, leverancierNaam, klantNaam, gebruikerNummer);
-		db.insertOrder(newOrder);
+	public void insertOrder(Stichting newStichting, DataBaseInterface db, String gebruiker, String artikel, String omschrijving, String datum, Double prijs,BetalingsMiddel typeBetaling, Status orderStatus ) {
+		ArrayList<Leverancier> leveranciers = newStichting.getLeveranciers(newStichting, db);
+		for (Leverancier l:leveranciers) {
+			if (l.getLeverancierNaam().equals(gebruiker)) {
+				Order newOrder = new Order(artikel, omschrijving, datum, prijs, typeBetaling, orderStatus, l, null, l.getGebruikerNummer());
+				db.insertOrder(newOrder);
+				return; 
+			}
+		}
+		ArrayList<Klant> klanten = newStichting.getKlanten(newStichting, db);
+		for (Klant k:klanten) {
+			if (k.getKlantNaam().equals(gebruiker)) {
+				Order newOrder = new Order(artikel, omschrijving, datum, prijs, typeBetaling, orderStatus, null, k, k.getGebruikerNummer());
+				db.insertOrder(newOrder);
+				return;
+			}
+		}
+		
 	}
 	public void disposeAndCreateDB() {
 		DataBaseInterface resetDB = new DataBaseManager();
@@ -36,32 +51,32 @@ public class ApplicatieLogica {
 		Order infoOrder = orders.get(indexNo);
 		return infoOrder;
 	}
-	
-	public String getGebruikerbyNummer(Order order) {
-		Order tempOrder = order;
-		String guiName;
-		if(tempOrder.getKlantNaam()==null) {
-			Leverancier tempLev;
-			guiName = tempOrder.getLeverancierNaam().getLeverancierNaam();
-		} else {
-			Klant tempKlant;
-			guiName = tempOrder.getKlantNaam().getKlantNaam();
-		}
-		
-		return guiName;
-	}
 
-	public Klant getKlantInfo(int indexNo, Stichting newStichting, DataBaseInterface db) {
+	public Klant getKlantInfo(int indexNo, Stichting newStichting, DataBaseInterface db, String filter) {
 		ArrayList<Klant> klanten = newStichting.getKlanten(newStichting, db);
-		Klant infoKlant = klanten.get(indexNo);	
-		return infoKlant;
+		if (filter == null || filter.equals(" ")) {
+			Klant infoKlant = klanten.get(indexNo);	
+			return infoKlant;
+		}
+		else {
+			ArrayList<Klant> filteredKlanten = getFilteredSearchKlanten(newStichting, klanten, filter);
+			Klant infoFilteredKlant = filteredKlanten.get(indexNo);
+			return infoFilteredKlant;
+		}
 	}
 	
-	public Leverancier getLevInfo(int indexNo, Stichting newStichting, DataBaseInterface db) {
+	public Leverancier getLevInfo(int indexNo, Stichting newStichting, DataBaseInterface db, String filter) {
 		ArrayList<Leverancier> leveranciers = newStichting.getLeveranciers(newStichting, db);
-		Leverancier infoLev = leveranciers.get(indexNo);	
-		return infoLev;
-	}
+		if(filter == null || filter.equals(" ")) {
+			Leverancier infoLev = leveranciers.get(indexNo);	
+			return infoLev;
+		}
+		else {
+			ArrayList<Leverancier> filteredLeveranciers = getFilteredSearchLeveranciers(newStichting, leveranciers, filter);
+			Leverancier infoFilteredLev = filteredLeveranciers.get(indexNo);
+			return infoFilteredLev;
+		}
+		}
 	
 	public void prepKlantForDelete(int indexNo, Stichting newStichting, DataBaseInterface db) {
 		ArrayList<Klant> klanten = newStichting.getKlanten(newStichting, db);
@@ -80,6 +95,23 @@ public class ApplicatieLogica {
 		Order deletedOrder = orders.get(indexNo);
 		db.deleteOrder(deletedOrder);
 	}
+	
+	public String[] getGebruikers(Stichting newStichting, DataBaseInterface db) {
+		String[] allCustomers = getCustomerNames(newStichting, db, null);
+		String[] allSuppliers = getSupplierNames(newStichting, db, null);
+		
+		String[] both = new String[allCustomers.length+allSuppliers.length];
+		int index = allCustomers.length;
+		for (int i=0; i<allCustomers.length; i++) {
+			both[i] = allCustomers[i];
+		}
+		for (int i=0; i<allSuppliers.length; i++) {
+			both[i+ index]= allSuppliers[i];
+		}
+		return both;
+	}
+	
+	
 	
 	public ArrayList<Order> sortPrices(Stichting newStichting, DataBaseInterface db){
 		ArrayList<Order> orders = newStichting.getOrders(newStichting, db);
@@ -128,4 +160,73 @@ public class ApplicatieLogica {
 		}
 		return orders;
 	}
-}
+	public ArrayList<Klant> getFilteredSearchKlanten(Stichting newStichting, ArrayList<Klant> klanten, String filter){
+		ArrayList<Klant> searchedNames = new ArrayList<Klant>();
+		for(Klant k:klanten) {
+			if(k.getKlantNaam().toLowerCase().contains(filter.toLowerCase())) {
+				searchedNames.add(k);
+			}
+		}
+		return searchedNames;
+	}
+	
+	public ArrayList<Leverancier> getFilteredSearchLeveranciers(Stichting newStichting, ArrayList<Leverancier> leveranciers, String filter){
+		ArrayList<Leverancier> searchedNames = new ArrayList<Leverancier>();
+		for(Leverancier l:leveranciers) {
+			if(l.getLeverancierNaam().toLowerCase().contains(filter.toLowerCase())) {
+				searchedNames.add(l);
+			}
+		}
+		return searchedNames;
+	}
+	
+	public String[] getCustomerNames(Stichting newStichting, DataBaseInterface db, String filter){
+		ArrayList<Klant> klanten = newStichting.getKlanten(newStichting, db);
+		if (filter == null || filter.equals(" ")) {
+			String[] listOfCustomerNames = new String[klanten.size()];
+			int i=0;
+			for (Klant klant: klanten) {
+				listOfCustomerNames[i] = klant.getKlantNaam();
+				i++;
+		}
+			return listOfCustomerNames;
+		}
+		else {
+			ArrayList<Klant> searchedKlanten = getFilteredSearchKlanten(newStichting, klanten, filter);
+			String[] listOfSearchedNames = new String[searchedKlanten.size()];
+			int i=0;
+			for(Klant k:searchedKlanten) {
+				listOfSearchedNames[i] = k.getKlantNaam();
+				i++;
+			}
+			return listOfSearchedNames;
+				}
+		}
+	
+	public String[] getSupplierNames(Stichting newStichting, DataBaseInterface db, String filter){
+		ArrayList<Leverancier> leveranciers = newStichting.getLeveranciers(newStichting, db);
+		if (filter == null || filter.equals(" ")) {
+			String[] listOfSupplierNames = new String[leveranciers.size()];
+			int i=0;
+			for (Leverancier l:leveranciers) {
+				listOfSupplierNames[i] = l.getLeverancierNaam();
+				i++;
+		}
+			return listOfSupplierNames;
+		}
+		else {
+			ArrayList<Leverancier> searchedLeveranciers = getFilteredSearchLeveranciers(newStichting, leveranciers, filter);
+			String[] listOfSearchedNames = new String[searchedLeveranciers.size()];
+			int i=0;
+			for(Leverancier l:searchedLeveranciers) {
+				listOfSearchedNames[i] = l.getLeverancierNaam();
+				i++;
+			}
+			return listOfSearchedNames;
+				}
+		}
+	}
+
+	
+
+

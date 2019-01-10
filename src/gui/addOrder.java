@@ -213,8 +213,11 @@ public class addOrder {
 		textGebruiker = new Combo(orderShell, SWT.READ_ONLY);
 		textGebruiker.setToolTipText("");
 		textGebruiker.setBounds(154, 489, 267, 21);
+		//getGebruikersList();
+		
 		String[] listGebruikers = getGebruikers(); 
 		textGebruiker.setItems(listGebruikers);
+		
 				
 		textOmschrijving = new Text(orderShell, SWT.BORDER);
 		textOmschrijving.setBounds(554, 385, 267, 154);
@@ -343,13 +346,14 @@ public class addOrder {
 		//int ordernummer = Integer.valueOf(textOrdernummer.getText());
 		String artikel = textArtikel.getText();
 		Double prijs = Double.valueOf(textPrijs.getText());
-		int gebruikerNummer = Integer.valueOf(textGebruiker.getText());
+		//int gebruikerNummer = Integer.valueOf(textGebruiker.getText());
 		String omschrijving = textOmschrijving.getText();
 		String datum = textDatum.getText();
 		BetalingsMiddel betaling = BetalingsMiddel.valueOf(comboBetaling.getText());
 		Status orderStatus = Status.valueOf(comboStatus.getText());
-
-		newLogic.insertOrder(db, artikel, omschrijving, datum, prijs, betaling, orderStatus, leverancierNaam, klantNaam, gebruikerNummer);
+		String gebruiker = textGebruiker.getText();
+		
+		newLogic.insertOrder(newStichting, db, gebruiker, artikel, omschrijving, datum, prijs, betaling, orderStatus);
 		Double newBalans = newStichting.calculateNewBalance(prijs, newStichting);
 		balancetext.setText(Double.toString(newBalans));
 		orderTable.removeAll();
@@ -377,7 +381,6 @@ public class addOrder {
 		System.out.println(infoOrder.getOrderStatus().toString());
 		comboStatus.setText(infoOrder.getOrderStatus().toString());
 		comboBetaling.setText(infoOrder.getTypeBetaling().toString());
-		textGebruiker.setText(infoOrder.getKlantNaam().getKlantNaam());
 		
 		Klant klant = infoOrder.getKlantNaam();
 		Leverancier lev = infoOrder.getLeverancierNaam();
@@ -412,9 +415,14 @@ public class addOrder {
 			newItem.setText(tableItems);
 		}
 	}
+
+	public void getGebruikersList() {
+		textGebruiker.setData(newStichting.getKlanten(newStichting, db));
+	}
+	
 	
 	public String[] getGebruikers() {
-		String [] listofGebruikers = newStichting.getGebruikers(newStichting, db);
+		String [] listofGebruikers = newLogic.getGebruikers(newStichting, db);
 		return listofGebruikers;
 	}
 	

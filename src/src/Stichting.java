@@ -24,29 +24,6 @@ public class Stichting {
 	
 	public Stichting() {}
 	
-	public String[] getCustomerNames(Stichting newStichting, DataBaseInterface db){
-		this.db = db;
-		newStichting.getKlanten(newStichting, db);
-		String[] listOfCustomerNames = new String[klanten.size()];
-		int i=0;
-		for (Klant klant: klanten) {
-			listOfCustomerNames[i] = klant.getKlantNaam();
-			i++;
-		}
-		return listOfCustomerNames;
-	}
-	
-	public String[] getLeverancierNames(Stichting newStichting, DataBaseInterface db) {
-		newStichting.getLeveranciers(newStichting, db);
-		String[] listOfLeverancierNames = new String[leveranciers.size()];
-		int i=0;
-		for (Leverancier leverancier:leveranciers) {
-			listOfLeverancierNames[i] = leverancier.getLeverancierNaam();
-			i++;
-		}	
-		return listOfLeverancierNames;
-	}
-	
 	public String getStichtingNaam() {
 		return stichtingNaam;
 	}
@@ -184,19 +161,6 @@ public class Stichting {
 		
 	}
 
-	public String[] getGebruikers(Stichting newStichting, DataBaseInterface db) {
-		String[] allCustomers = newStichting.getCustomerNames(newStichting, db);
-		String[] allSuppliers = newStichting.getLeverancierNames(newStichting, db);
-		
-		String[] both = new String[allCustomers.length+allSuppliers.length];
-		int index = allCustomers.length;
-		for (int i=0; i<allCustomers.length; i++) {
-			both[i] = allCustomers[i];
-		}
-		for (int i=0; i<allSuppliers.length; i++) {
-			both[i+ index]= allSuppliers[i];
-		}
-		return both;
-	}
+
 
 }

@@ -19,11 +19,8 @@ import src.Klant;
 import src.Stichting;
 
 import org.eclipse.swt.widgets.Button;
-
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-
-
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class CustomerList2 {
 	private Text textNaam;
@@ -33,6 +30,7 @@ public class CustomerList2 {
 	private Text textTelefoonNr;
 	private Text textGebNr;
 	private Text textOpmerkingen;
+	String filter = null;
 	
 	private ArrayList<Klant> klantinfo;
 	ApplicatieLogica newLogic = new ApplicatieLogica();
@@ -40,6 +38,7 @@ public class CustomerList2 {
 	Stichting newStichting;
 	DataBaseInterface db;
 	private List customerList;
+	private Text textSearch;
 	
 	/**
 	 * Launch the application.
@@ -113,61 +112,57 @@ public class CustomerList2 {
 		customerList = new List(customerShell2, SWT.BORDER | SWT.V_SCROLL);
 		customerList.setBounds(10, 36, 246, 478);
 		
-		String[] listOfCustomerNames = getCustomerNames();
+		String[] listOfCustomerNames = getCustomerNames(null);
 		customerList.setItems(listOfCustomerNames);
-		customerList.addListener(SWT.Selection, event -> onListItemSelect(customerList));
+		customerList.addListener(SWT.Selection, event -> onListItemSelect(customerList, filter));
 
 		Label label = new Label(customerShell2, SWT.SEPARATOR | SWT.VERTICAL);
-		label.setBounds(262, 0, 15, 534);
+		label.setBounds(317, 13, 15, 534);
 				
 		Label lblNewLabel = new Label(customerShell2, SWT.NONE);
-		lblNewLabel.setBounds(283, 40, 55, 15);
+		lblNewLabel.setBounds(338, 40, 55, 15);
 		lblNewLabel.setText("Naam");
 		
 		textNaam = new Text(customerShell2, SWT.BORDER);
-		textNaam.setBounds(393, 37, 144, 21);
+		textNaam.setBounds(454, 37, 144, 21);
 		
 		Label lblNewLabel_1 = new Label(customerShell2, SWT.NONE);
-		lblNewLabel_1.setBounds(283, 72, 55, 15);
+		lblNewLabel_1.setBounds(338, 67, 55, 15);
 		lblNewLabel_1.setText("Adres");
 		
 		textAdres = new Text(customerShell2, SWT.BORDER);
-		textAdres.setBounds(393, 69, 205, 21);
+		textAdres.setBounds(454, 64, 205, 21);
 		
 		Label lblNewLabel_2 = new Label(customerShell2, SWT.NONE);
-		lblNewLabel_2.setBounds(283, 104, 55, 15);
+		lblNewLabel_2.setBounds(338, 104, 55, 15);
 		lblNewLabel_2.setText("Plaats");
 		
 		Label lblEmailadres = new Label(customerShell2, SWT.NONE);
-		lblEmailadres.setBounds(283, 141, 76, 15);
+		lblEmailadres.setBounds(338, 141, 76, 15);
 		lblEmailadres.setText("E-mailadres");
 		
 		textPlaats = new Text(customerShell2, SWT.BORDER);
-		textPlaats.setBounds(393, 101, 76, 21);
+		textPlaats.setBounds(454, 101, 76, 21);
 		
 		textEmail = new Text(customerShell2, SWT.BORDER);
-		textEmail.setBounds(393, 138, 144, 21);
+		textEmail.setBounds(454, 138, 144, 21);
 		
 		Label lblTelefoonnummer = new Label(customerShell2, SWT.NONE);
-		lblTelefoonnummer.setBounds(283, 184, 110, 15);
+		lblTelefoonnummer.setBounds(338, 184, 110, 15);
 		lblTelefoonnummer.setText("Telefoonnummer");
 		
 		textTelefoonNr = new Text(customerShell2, SWT.BORDER);
-		textTelefoonNr.setBounds(393, 181, 144, 21);
+		textTelefoonNr.setBounds(454, 181, 144, 21);
 		
 		Label lblOpmerkingen = new Label(customerShell2, SWT.NONE);
-		lblOpmerkingen.setBounds(283, 236, 88, 15);
+		lblOpmerkingen.setBounds(338, 236, 88, 15);
 		lblOpmerkingen.setText("Opmerkingen");
 		
 		textOpmerkingen = new Text(customerShell2, SWT.BORDER);
-		textOpmerkingen.setBounds(393, 233, 205, 160);
-		
-		CLabel lblFoto = new CLabel(customerShell2, SWT.NONE);
-		lblFoto.setBounds(604, 181, 133, 122);
-		lblFoto.setText("Foto");
+		textOpmerkingen.setBounds(454, 233, 205, 160);
 		
 		Button btnOpslaan = new Button(customerShell2, SWT.NONE);
-		btnOpslaan.setBounds(393, 489, 101, 25);
+		btnOpslaan.setBounds(442, 489, 101, 25);
 		btnOpslaan.setText("Opslaan");
 		btnOpslaan.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -177,7 +172,7 @@ public class CustomerList2 {
 		});
 		
 		Button btnToevoegen = new Button(customerShell2, SWT.NONE);	
-		btnToevoegen.setBounds(283, 489, 101, 25);
+		btnToevoegen.setBounds(338, 489, 101, 25);
 		btnToevoegen.setText("Toevoegen...");
 		btnToevoegen.addListener(SWT.Selection, new Listener(){
 			@Override
@@ -188,15 +183,45 @@ public class CustomerList2 {
 		
 		Button btnVerwijderen = new Button(customerShell2, SWT.NONE);
 		btnVerwijderen.setText("Verwijderen");
-		btnVerwijderen.setBounds(500, 489, 101, 25);
+		btnVerwijderen.setBounds(546, 489, 101, 25);
 		
 		textGebNr = new Text(customerShell2, SWT.BORDER);
 		textGebNr.setEditable(false);
-		textGebNr.setBounds(393, 423, 144, 21);
+		textGebNr.setBounds(454, 426, 144, 21);
 		
 		Label lblGebruikernummer = new Label(customerShell2, SWT.NONE);
 		lblGebruikernummer.setText("Gebruikernummer");
-		lblGebruikernummer.setBounds(283, 429, 110, 15);
+		lblGebruikernummer.setBounds(338, 429, 101, 25);
+		
+		textSearch = new Text(customerShell2, SWT.BORDER);
+		textSearch.setBounds(10, 10, 165, 21);
+		
+		Button btnSearch = new Button(customerShell2, SWT.NONE);
+		btnSearch.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				filter = textSearch.getText();
+				String[] resultOfSearch = getCustomerNames(filter);
+				customerList.setItems(resultOfSearch);
+			}
+		});
+		btnSearch.setBounds(181, 10, 75, 22);
+		btnSearch.setText("Zoeken...");
+		
+		Button btnClearSearch = new Button(customerShell2, SWT.NONE);
+		btnClearSearch.setBounds(262, 10, 36, 21);
+		btnClearSearch.setText("X");
+		btnClearSearch.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+			textSearch.setText("");
+			filter = null;
+			String[] listOfCustomerNames = getCustomerNames(null);
+			customerList.setItems(listOfCustomerNames);
+			}
+		});
+		
+		
 		btnVerwijderen.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
@@ -226,17 +251,15 @@ public class CustomerList2 {
 		}
 	}
 
-	public String[] getCustomerNames() {
+	public String[] getCustomerNames(String filter) {
 		//create a query to get the whole list of customers and return only the names
-		String[] listOfCustomerNames = newStichting.getCustomerNames(newStichting, db);
+		String[] listOfCustomerNames = newLogic.getCustomerNames(newStichting, db, filter);
 		return listOfCustomerNames;
 	}
 	
-	public void onListItemSelect(List customerList) {
+	public void onListItemSelect(List customerList, String filter) {
 		int indexNo = customerList.getFocusIndex();
-		//klantinfo = newStichting.getKlanten(newStichting, db);
-		//Klant infoKlant = klantinfo.get(indexNo);
-		Klant infoKlant = newLogic.getKlantInfo(indexNo, newStichting, db);
+		Klant infoKlant = newLogic.getKlantInfo(indexNo, newStichting, db, filter);
 		textNaam.setText(infoKlant.getKlantNaam());
 		textAdres.setText(infoKlant.getKlantAdres());
 		textPlaats.setText(infoKlant.getKlantPlaats());
@@ -256,7 +279,7 @@ public class CustomerList2 {
 		String klantOpmerking = textOpmerkingen.getText();
 		
 		newLogic.insertKlant(db, klantNaam, klantAdres, klantPlaats, klantEmail, klantTelefoonNr, klantOpmerking);
-		String[] listOfCustomerNames = getCustomerNames();
+		String[] listOfCustomerNames = getCustomerNames(null);
 		customerList.setItems(listOfCustomerNames);	
 		}
 	
@@ -265,7 +288,8 @@ public class CustomerList2 {
 		newLogic.prepKlantForDelete(indexNo, newStichting, db);
 		customerList.removeAll();
 		//TODO: maybe make a seperate function for reloading the list as this happens throughout several times
-		String[] listOfCustomerNames = getCustomerNames();
+		String[] listOfCustomerNames = getCustomerNames(null);
 		customerList.setItems(listOfCustomerNames);	
 	}
+	
 	}

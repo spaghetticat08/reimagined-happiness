@@ -25,6 +25,8 @@ import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Label;
@@ -48,6 +50,9 @@ public class SupplierList {
 	private Text textWebsite;
 	private Text textLand;
 	private Text textGebNr;
+	private Text textSearch;
+	
+	String filter = null;
 	
 	/**
 	 * Launch the application.
@@ -128,95 +133,94 @@ public class SupplierList {
 
 		//Make list
 		
-		supplierList = new List(supplierShell, SWT.BORDER);
-				
+		supplierList = new List(supplierShell, SWT.BORDER);		
 		supplierList.setBounds(10, 36, 246, 478);
 				
-		String[] listOfSupplierNames = getSupplierNames();
+		String[] listOfSupplierNames = getSupplierNames(null);
 		supplierList.setItems(listOfSupplierNames);
-		supplierList.addListener(SWT.Selection, event -> onListItemSelect(supplierList));
+		supplierList.addListener(SWT.Selection, event -> onListItemSelect(supplierList, filter));
 		
 		Label label = new Label(supplierShell, SWT.SEPARATOR | SWT.VERTICAL);
-		label.setBounds(262, 0, 15, 534);
+		label.setBounds(317, 13, 15, 534);
 		
 		textNaam = new Text(supplierShell, SWT.BORDER);
-		textNaam.setBounds(393, 37, 144, 21);
+		textNaam.setBounds(454, 37, 144, 21);
 		
 		Label lblNewLabel = new Label(supplierShell, SWT.NONE);
-		lblNewLabel.setBounds(283, 40, 55, 15);
+		lblNewLabel.setBounds(338, 40, 55, 15);
 		lblNewLabel.setText("Naam");
 		
 		Label lblNewLabel_1 = new Label(supplierShell, SWT.NONE);
-		lblNewLabel_1.setBounds(283, 96, 55, 15);
+		lblNewLabel_1.setBounds(338, 96, 55, 15);
 		lblNewLabel_1.setText("Adres");
 		
 		textAdres = new Text(supplierShell, SWT.BORDER);
-		textAdres.setBounds(393, 93, 233, 21);
+		textAdres.setBounds(454, 93, 233, 21);
 		
 		Label lblNewLabel_2 = new Label(supplierShell, SWT.NONE);
-		lblNewLabel_2.setBounds(283, 123, 55, 15);
+		lblNewLabel_2.setBounds(338, 123, 55, 15);
 		lblNewLabel_2.setText("Plaats");
 		
 		Label lblEmailadres = new Label(supplierShell, SWT.NONE);
-		lblEmailadres.setBounds(283, 191, 76, 15);
+		lblEmailadres.setBounds(338, 191, 76, 15);
 		lblEmailadres.setText("E-mailadres");
 		
 		textPlaats = new Text(supplierShell, SWT.BORDER);
-		textPlaats.setBounds(393, 120, 144, 21);
+		textPlaats.setBounds(454, 120, 144, 21);
 		
 		textEmail = new Text(supplierShell, SWT.BORDER);
-		textEmail.setBounds(393, 188, 205, 21);
+		textEmail.setBounds(454, 188, 205, 21);
 		
 		Label lblTelefoonnummer = new Label(supplierShell, SWT.NONE);
-		lblTelefoonnummer.setBounds(283, 216, 110, 15);
+		lblTelefoonnummer.setBounds(338, 216, 110, 15);
 		lblTelefoonnummer.setText("Telefoonnummer");
 		
 		textTelefoonNr = new Text(supplierShell, SWT.BORDER);
-		textTelefoonNr.setBounds(393, 213, 144, 21);
+		textTelefoonNr.setBounds(454, 213, 144, 21);
 		
 		Label lblOpmerkingen = new Label(supplierShell, SWT.NONE);
-		lblOpmerkingen.setBounds(283, 312, 88, 15);
+		lblOpmerkingen.setBounds(338, 312, 88, 15);
 		lblOpmerkingen.setText("Opmerkingen");
 		
 		textOpmerking = new Text(supplierShell, SWT.BORDER);
-		textOpmerking.setBounds(393, 309, 205, 160);
+		textOpmerking.setBounds(454, 309, 205, 160);
 		
 		Button btnOpslaan = new Button(supplierShell, SWT.NONE);
-		btnOpslaan.setBounds(393, 490, 101, 25);
+		btnOpslaan.setBounds(445, 489, 101, 25);
 		btnOpslaan.setText("Opslaan");
 		
 		textContact = new Text(supplierShell, SWT.BORDER);
-		textContact.setBounds(393, 66, 144, 21);
+		textContact.setBounds(454, 66, 144, 21);
 		
 		Label lblContactpersoon = new Label(supplierShell, SWT.NONE);
 		lblContactpersoon.setText("Contactpersoon");
-		lblContactpersoon.setBounds(283, 69, 110, 15);
+		lblContactpersoon.setBounds(338, 69, 110, 15);
 		
 		textWebsite = new Text(supplierShell, SWT.BORDER);
-		textWebsite.setBounds(393, 237, 144, 21);
+		textWebsite.setBounds(454, 240, 144, 21);
 		
 		Label lblWebsite = new Label(supplierShell, SWT.NONE);
 		lblWebsite.setText("Website");
-		lblWebsite.setBounds(283, 237, 55, 15);
+		lblWebsite.setBounds(338, 243, 55, 15);
 		
 		textLand = new Text(supplierShell, SWT.BORDER);
-		textLand.setBounds(393, 147, 144, 21);
+		textLand.setBounds(454, 147, 144, 21);
 		
 		textGebNr = new Text(supplierShell, SWT.BORDER);
 		textGebNr.setEditable(false);
-		textGebNr.setBounds(393, 264, 144, 21);
+		textGebNr.setBounds(454, 267, 144, 21);
 		
 		Label lblLand = new Label(supplierShell, SWT.NONE);
 		lblLand.setText("Land (Invullen \r\nindien niet NL)");
-		lblLand.setBounds(283, 150, 88, 38);
+		lblLand.setBounds(338, 147, 88, 38);
 		
 		Label lblGebruikernummer = new Label(supplierShell, SWT.NONE);
 		lblGebruikernummer.setText("Gebruikernummer");
-		lblGebruikernummer.setBounds(283, 267, 110, 15);
+		lblGebruikernummer.setBounds(338, 270, 110, 15);
 		
 		Button btnToevoegen = new Button(supplierShell, SWT.NONE);
 		btnToevoegen.setText("Toevoegen...");
-		btnToevoegen.setBounds(283, 490, 101, 25);
+		btnToevoegen.setBounds(338, 489, 101, 25);
 		btnToevoegen.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -224,9 +228,37 @@ public class SupplierList {
 			}
 		});
 		
+		textSearch = new Text(supplierShell, SWT.BORDER);
+		textSearch.setBounds(10, 10, 165, 21);
+		
+		Button btnSearch = new Button(supplierShell, SWT.NONE);
+		btnSearch.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				filter = textSearch.getText();
+				String[] resultOfSearch = getSupplierNames(filter);
+				supplierList.setItems(resultOfSearch);
+			}
+		});
+		btnSearch.setBounds(181, 10, 75, 22);
+		btnSearch.setText("Zoeken...");
+		
+		Button btnClearSearch = new Button(supplierShell, SWT.NONE);
+		btnClearSearch.setBounds(262, 10, 36, 21);
+		btnClearSearch.setText("X");
+		btnClearSearch.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+			textSearch.setText("");
+			filter = null;
+			String[] listOfSupplierNames = getSupplierNames(null);
+			supplierList.setItems(listOfSupplierNames);
+			}
+		});
+		
 		Button btnVerwijderen = new Button(supplierShell, SWT.NONE);
 		btnVerwijderen.setText("Verwijderen");
-		btnVerwijderen.setBounds(500, 490, 101, 25);
+		btnVerwijderen.setBounds(552, 489, 101, 25);
 		btnVerwijderen.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -249,15 +281,15 @@ public class SupplierList {
 		}
 	}
 	
-	public String[] getSupplierNames() {
+	public String[] getSupplierNames(String filter) {
 		//create a query to get the whole list of customers and return only the names
-		String[] listOfSupplierNames = newStichting.getLeverancierNames(newStichting, db);
+		String[] listOfSupplierNames = newLogic.getSupplierNames(newStichting, db, filter);
 		return listOfSupplierNames;
 	}
 
-	public void onListItemSelect(List supplierList) {
+	public void onListItemSelect(List supplierList, String filter) {
 		int indexNo = supplierList.getFocusIndex();
-		Leverancier infoLev = newLogic.getLevInfo(indexNo, newStichting, db);
+		Leverancier infoLev = newLogic.getLevInfo(indexNo, newStichting, db, filter);
 		textNaam.setText(infoLev.getLeverancierNaam());
 		textContact.setText(infoLev.getContactPersoon());
 		textAdres.setText(infoLev.getLeverancierAdres());
@@ -283,14 +315,14 @@ public class SupplierList {
 		
 		newLogic.insertLeverancier(db, levNaam, contactPersoon, levAdres, levPlaats, land, levEmail, levTelefoonNr, website, levOpmerking);
 		
-		String[] listOfSupplierNames = getSupplierNames();
+		String[] listOfSupplierNames = getSupplierNames(null);
 		supplierList.setItems(listOfSupplierNames);
 	}
 	public void deleteSupplier() {
 		int indexNo = supplierList.getFocusIndex();
 		newLogic.prepLevForDelete(indexNo, newStichting, db);
 		//TODO: refresh supplierlist
-		String[] listOfSupplierNames = getSupplierNames();
+		String[] listOfSupplierNames = getSupplierNames(null);
 		supplierList.setItems(listOfSupplierNames);
 		
 		
