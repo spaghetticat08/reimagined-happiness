@@ -225,6 +225,16 @@ public class ApplicatieLogica {
 			return listOfSearchedNames;
 				}
 		}
+	
+	//This is a function to reset the xml containing the name and balance, in case it starts malfunctioning. 
+	//The inital balance will be set to 0.00 and the name will be set to the default name which is "Reimagined Hapiness"
+	public boolean resetXML(String location) {
+		StichtingGegevens resetGegevens = new StichtingGegevens();
+		String xml =location;
+		resetGegevens.saveToXML(xml, "Reimagined Happiness", "0.00");
+		
+		return true;
+	}
 	}
 
 	

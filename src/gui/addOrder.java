@@ -4,17 +4,7 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.widgets.Composite;
-import java.awt.Frame;
-import org.eclipse.swt.awt.SWT_AWT;
-import java.awt.Panel;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.awt.BorderLayout;
-import javax.swing.JRootPane;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
@@ -26,8 +16,6 @@ import org.eclipse.swt.widgets.Text;
 
 
 import Interface.DataBaseInterface;
-import db.DataBaseManager;
-import db.ReadDB;
 import src.ApplicatieLogica;
 import src.BetalingsMiddel;
 import src.Klant;
@@ -36,11 +24,9 @@ import src.Order;
 import src.Status;
 import src.Stichting;
 
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.DateTime;
-import org.eclipse.swt.graphics.Point;
+
 public class addOrder {
 	private  Table orderTable;
 	private Text textOrdernummer;
@@ -115,7 +101,6 @@ public class addOrder {
 		Text balancetext = new Text(orderShell, SWT.BORDER);
 		balancetext.setEnabled(false);
 		balancetext.setBounds(740, 34, 81, 25);
-		balancetext.setText(String.valueOf(newStichting.getBalans()));
 		
 		Menu menu = new Menu(orderShell, SWT.BAR);
 		orderShell.setMenuBar(menu);
@@ -159,18 +144,9 @@ public class addOrder {
 		Menu menu_2 = new Menu(mntmNewSubmenu_1);
 		mntmNewSubmenu_1.setMenu(menu_2);
 		
-		MenuItem mntmToevoegen = new MenuItem(menu_2, SWT.NONE);
-		mntmToevoegen.setText("Toevoegen...");
+		MenuItem mntmBalans = new MenuItem(menu_2, SWT.NONE);
+		mntmBalans.setText("Balans aanpassen");
 		
-		new MenuItem(menu_2, SWT.SEPARATOR);
-		
-		MenuItem mntmVerwijderen = new MenuItem(menu_2, SWT.NONE);
-		mntmVerwijderen.setText("Verwijderen...");
-		
-		new MenuItem(menu_2, SWT.SEPARATOR);
-		
-		MenuItem mntmAanpassen = new MenuItem(menu_2, SWT.NONE);
-		mntmAanpassen.setText("Aanpassen...");
 		
 		new MenuItem(menu_2, SWT.SEPARATOR);
 		

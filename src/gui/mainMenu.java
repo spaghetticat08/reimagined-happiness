@@ -1,7 +1,5 @@
 package gui;
 
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -58,7 +56,6 @@ import src.Stichting;
 			customerButton.setText("Klantenoverzicht");
 			
 			//customerbutton with eventlistener
-			//todo: close mainmenu once submenu has been opened
 			customerButton.addListener(SWT.Selection, new Listener() {
 				@Override
 				public void handleEvent(Event e) {
@@ -84,16 +81,62 @@ import src.Stichting;
 			Menu menu_1 = new Menu(mntmInstellingen);
 			mntmInstellingen.setMenu(menu_1);
 			
+			MenuItem mntmStichtingGegevensResetten = new MenuItem(menu_1, SWT.NONE);
+			mntmStichtingGegevensResetten.setText("Stichting gegevens resetten");
+			mntmStichtingGegevensResetten.addListener(SWT.Selection, new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					final Shell directorydialog = new Shell(mainDisplay);
+					directorydialog.setLayout(new GridLayout(6, true));
+					new Label(directorydialog, SWT.NONE).setText("Directory:");
+					final Text text = new Text(directorydialog, SWT.BORDER);
+				    GridData data = new GridData(GridData.FILL_HORIZONTAL);
+				    data.horizontalSpan = 4;
+				    text.setLayoutData(data);
+				    
+				    Button browseButton =  new Button(directorydialog, SWT.PUSH);
+				    browseButton.setText("Browse...");
+				    browseButton.addSelectionListener(new SelectionAdapter() {
+				    	public void widgetSelected(SelectionEvent event) {
+				    		DirectoryDialog dlg = new DirectoryDialog(directorydialog);
+				    		dlg.setFilterPath(text.getText());
+				    		dlg.setText("Directory");
+				    		dlg.setMessage("Choose the location where you would like to save the XML-datafile. Hint: put it in the source map of where this application is located");
+				    		String dir = dlg.open();
+				    		if(dir!=null) {
+				    			text.setText(dir);
+				    		}
+				    	}
+				    });
+				    Button okButton = new Button(directorydialog, SWT.PUSH);
+				    okButton.addSelectionListener(new SelectionAdapter() {
+				    	@Override
+				    	public void widgetSelected(SelectionEvent e) {
+				    		String locationdir = text.getText();
+				    		boolean succes = resetLogic.resetXML(locationdir);
+				    		if (succes == true) {
+				    			final MessageBox confirmed = new MessageBox(directorydialog, SWT.OK);
+				    			confirmed.setMessage("Resetting XML-datafile succesfull!");
+				    			confirmed.open();
+				    		}
+				    	}
+				    });;
+				    directorydialog.pack();
+				    directorydialog.open();
+				}
+				
+			});
+			
+			new MenuItem(menu_1, SWT.SEPARATOR);
+			
 			MenuItem mntmDatabaseResetten = new MenuItem(menu_1, SWT.NONE);
 			mntmDatabaseResetten.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					resetDataBase();
-				}
-					/*final Shell dialog  = new Shell(mainShell, SWT.DIALOG_TRIM);
+					final Shell dialog  = new Shell(mainShell, SWT.DIALOG_TRIM);
 					dialog.setLayout(new RowLayout());
 					dialog.setSize(200, 100);
-					final Text textPassword = new Text(dialog, SWT.BORDER);
+					final Text textPassword = new Text(dialog, SWT.BORDER|SWT.PASSWORD);
 					textPassword.setBounds(154, 439, 146, 21);
 					final Button okButton = new Button(dialog, SWT.PUSH);
 					okButton.setText("Valideren");
@@ -106,26 +149,26 @@ import src.Stichting;
 					okButton.addSelectionListener(new SelectionAdapter() {
 						@Override
 						public void widgetSelected(SelectionEvent e) {
-							String getText = textPassword.getText();
-							for (int i=0; 0<3; i++) {
-								if (getText==password) {
-									dialog.close();
+							String getPass = textPassword.getText();
+								if(getPass.equals(password)) {
 									resetDataBase();
+									dialog.close();
 									System.out.println("resetting database...");
-								}
-								else {
-									lblWarning.setVisible(true);
-								}
-								
+									return;
+								} else {
+									dialog.close();
 							}
-						dialog.close();	
 						}
 					});
-					//dialog.pack();
 					dialog.open();
-				}*/
+				}
 			});
 			mntmDatabaseResetten.setText("DataBase Resetten");
+			
+			new MenuItem(menu_1, SWT.SEPARATOR);
+			
+			MenuItem mntmStichtingnaamWijzigen = new MenuItem(menu_1, SWT.NONE);
+			mntmStichtingnaamWijzigen.setText("Stichtingnaam wijzigen");
 			
 			//Supplierbutton with eventlistener
 			//todo: close mainmenu once submenu has been opened
@@ -136,12 +179,7 @@ import src.Stichting;
 					SupplierList startSupplierMenu = new SupplierList(newStichting, db);
 				}
 			});
-			
-			//Make display for menu with orders
-		
-			//add listeners to buttons
-			
-			//run the event loop as long as the window is opened
+	
 			
 			mainShell.open();
 			while(!mainShell.isDisposed()) {
@@ -154,6 +192,5 @@ import src.Stichting;
 		public void resetDataBase() {
 			resetLogic.disposeAndCreateDB();
 		}
-		
 	}
 

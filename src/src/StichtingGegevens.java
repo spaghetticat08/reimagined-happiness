@@ -75,7 +75,7 @@ public class StichtingGegevens {
 	    return value;
 	}
 
-	public void saveToXML(String xml, String stichtingNaam, String balance) {
+	public boolean saveToXML(String xml, String stichtingNaam, String balance) {
 	    Document dom;
 	    Element e = null;
 
@@ -115,12 +115,16 @@ public class StichtingGegevens {
 
 	        } catch (TransformerException te) {
 	            System.out.println(te.getMessage());
+	            return false;
 	        } catch (IOException ioe) {
 	            System.out.println(ioe.getMessage());
+	            return false;
 	        }
 	    } catch (ParserConfigurationException pce) {
 	        System.out.println("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
+	        return false;
 	    }
+		return true;
 	}
 }
 	
