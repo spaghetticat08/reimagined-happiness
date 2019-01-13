@@ -39,15 +39,14 @@ import src.Stichting;
 			
 			Button orderButton = new Button(mainShell, SWT.PUSH);
 			orderButton.setBounds(92, 195, 120, 39);
-			orderButton.setText("Orders");
+			orderButton.setText("Order-overzicht");
 						
-			//Orderbutton with eventlistener
-			//todo: close mainmenu once submenu has been opened
+			//Listener top open the orderscreen
 			orderButton.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
 				mainShell.dispose();
-				addOrder startOrderMenu = new addOrder(newStichting, db);
+				OrderScreen startOrderMenu = new OrderScreen(newStichting, db);
 				
 			}
 			});
@@ -55,22 +54,18 @@ import src.Stichting;
 			customerButton.setBounds(92, 240, 120, 39);
 			customerButton.setText("Klantenoverzicht");
 			
-			//customerbutton with eventlistener
+			//Listener to open the customerscreen
 			customerButton.addListener(SWT.Selection, new Listener() {
 				@Override
 				public void handleEvent(Event e) {
 					mainShell.dispose();
-					CustomerList2 startCustomerMenu = new CustomerList2(newStichting, db);
+					CustomerScreen startCustomerMenu = new CustomerScreen(newStichting, db);
 					
 				}
 			});
 			Button supplierButton = new Button(mainShell, SWT.PUSH);
 			supplierButton.setBounds(92, 285, 120, 39);
 			supplierButton.setText("Leverancieroverzicht");
-			
-			Label lblNewLabel = new Label(mainShell, SWT.NONE);
-			lblNewLabel.setBounds(92, 53, 120, 124);
-			lblNewLabel.setText("New Label");
 			
 			Menu menu = new Menu(mainShell, SWT.BAR);
 			mainShell.setMenuBar(menu);
@@ -81,6 +76,9 @@ import src.Stichting;
 			Menu menu_1 = new Menu(mntmInstellingen);
 			mntmInstellingen.setMenu(menu_1);
 			
+			
+			//Method to recreate the XML-file containing the StichtingNaam en balans. Unfortunately this function is not fully implemented yet since choosing a location causes an error
+			//TODO: Fix error when choosing a new location
 			MenuItem mntmStichtingGegevensResetten = new MenuItem(menu_1, SWT.NONE);
 			mntmStichtingGegevensResetten.setText("Stichting gegevens resetten");
 			mntmStichtingGegevensResetten.addListener(SWT.Selection, new Listener() {
@@ -129,6 +127,8 @@ import src.Stichting;
 			
 			new MenuItem(menu_1, SWT.SEPARATOR);
 			
+			//Method to reset the database. This can only be executed by an admin, therefore it is protected with a password
+			//TODO: Implement warning that password is incorrect. Now it just closes without informing the user that reset has been sucessfull.
 			MenuItem mntmDatabaseResetten = new MenuItem(menu_1, SWT.NONE);
 			mntmDatabaseResetten.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -170,13 +170,12 @@ import src.Stichting;
 			MenuItem mntmStichtingnaamWijzigen = new MenuItem(menu_1, SWT.NONE);
 			mntmStichtingnaamWijzigen.setText("Stichtingnaam wijzigen");
 			
-			//Supplierbutton with eventlistener
-			//todo: close mainmenu once submenu has been opened
+			//Listener to open the supplierscreen
 			supplierButton.addListener(SWT.Selection, new Listener() {
 				@Override
 				public void handleEvent(Event e) {
 					mainShell.dispose();
-					SupplierList startSupplierMenu = new SupplierList(newStichting, db);
+					SupplierScreen startSupplierMenu = new SupplierScreen(newStichting, db);
 				}
 			});
 	
@@ -188,7 +187,7 @@ import src.Stichting;
 				}
 			mainDisplay.dispose();
 		}
-		
+		//method to reset the database
 		public void resetDataBase() {
 			resetLogic.disposeAndCreateDB();
 		}

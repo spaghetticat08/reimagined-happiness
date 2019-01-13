@@ -4,22 +4,31 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import org.eclipse.swt.widgets.Text;
+
 import Interface.DataBaseInterface;
 import db.DataBaseManager;
 
 public class ApplicatieLogica {
 	boolean descendingP = true;
 	boolean descendingN = true;
-	boolean descendingD = true;
 	
-	public void insertKlant(DataBaseInterface db, String klantNaam, String klantAdres, String klantPlaats, String klantEmail, String klantTelefoonNr, String klantOpmerking) {
+	public boolean insertKlant(DataBaseInterface db, String klantNaam, String klantAdres, String klantPlaats, String klantEmail, String klantTelefoonNr, String klantOpmerking) {
+		if (klantNaam.equals(null)||klantNaam.equals(" ") ||klantEmail.equals(null)||klantEmail.equals("")||klantTelefoonNr.equals(null)||klantTelefoonNr.equals("")){
+			return false;
+		}
 		Klant newKlant = new Klant(klantNaam, klantAdres, klantPlaats, klantEmail, klantTelefoonNr, klantOpmerking);	
 		db.insertKlant(newKlant);
+		return true;
 	}
 	
-	public void insertLeverancier(DataBaseInterface db, String levNaam, String contactPersoon, String levAdres, String levPlaats, String land, String levEmail, String LevTelefoonNr, String website, String levOpmerking) {
+	public boolean insertLeverancier(DataBaseInterface db, String levNaam, String contactPersoon, String levAdres, String levPlaats, String land, String levEmail, String LevTelefoonNr, String website, String levOpmerking) {
+		if(levNaam.equals(null)||levNaam.equals("") ||LevTelefoonNr.equals(null)||LevTelefoonNr.equals("")) {
+			return false;
+		}
 		Leverancier newLev = new Leverancier(levNaam, contactPersoon, levAdres, levPlaats, land, levEmail, LevTelefoonNr, website, levOpmerking);
 		db.insertLeverancier(newLev);
+		return true;
 	}
 	
 	public void insertOrder(Stichting newStichting, DataBaseInterface db, String gebruiker, String artikel, String omschrijving, String datum, Double prijs,BetalingsMiddel typeBetaling, Status orderStatus ) {

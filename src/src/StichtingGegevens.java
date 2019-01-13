@@ -20,11 +20,12 @@ public class StichtingGegevens {
 	 * when adding new orders, the balance will be updated and when closing the application the new balance
 	 * is overwritten in the xml file
 	 */
-	private String stichtingNaam = "Yoga B.V.";
-	private String balance = "55.10";
-	private ArrayList<String> rolev;
+	
 	
 	public Stichting readXML(String xml) {
+        String stichtingNaam = "Yoga B.V.";
+        String balance = "25.10";
+        ArrayList<String> rolev;
         rolev = new ArrayList<String>();
         Document dom;
         // Make an  instance of the DocumentBuilderFactory
@@ -37,6 +38,7 @@ public class StichtingGegevens {
             dom = db.parse(xml);
 
             Element doc = dom.getDocumentElement();
+            
 
             stichtingNaam = getTextValue(stichtingNaam, doc, "stichtingNaam");
             if (stichtingNaam != null) {

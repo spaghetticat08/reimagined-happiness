@@ -127,25 +127,6 @@ public class Stichting {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		/*
-		
-		try {
-			while (rsOrders.next()) {
-				Order tempOrder = new Order(
-						rsOrders.getString("artikel"),
-						rsOrders.getInt("orderNummer"),
-						rsOrders.getString("omschrijving"),
-						rsOrders.getString("datum"),
-						rsOrders.getDouble("prijs"),
-						BetalingsMiddel.valueOf(rsOrders.getString("typeBetaling")),
-						Status.valueOf(rsOrders.getString("orderStatus")),
-						rsOrders.getInt("gebGebruikerNummer"));
-					newStichting.orders.add(tempOrder);
-			}	
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}*/
 		return orders;
 	}
 	public void setOrders(ArrayList<Order> orders) {

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import db.DataBaseManager;
-import gui.CustomerList2;
+import gui.CustomerScreen;
 
 
 
