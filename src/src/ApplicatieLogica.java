@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
 import org.eclipse.swt.widgets.Text;
 
 import Interface.DataBaseInterface;
@@ -237,12 +240,14 @@ public class ApplicatieLogica {
 	
 	//This is a function to reset the xml containing the name and balance, in case it starts malfunctioning. 
 	//The inital balance will be set to 0.00 and the name will be set to the default name which is "Reimagined Hapiness"
-	public boolean resetXML(String location) {
+	public boolean resetXML() {
 		StichtingGegevens resetGegevens = new StichtingGegevens();
-		String xml =location;
-		resetGegevens.saveToXML(xml, "Reimagined Happiness", "0.00");
+		String xml ="C:\\Users\\Britt\\eclipse-workspace\\ShowCase\\src\\src\\gegevens.xml";
+		if (resetGegevens.writeXML(xml, "Reimagined Happiness", "0.00") == true) {
+			return true;
+		};
 		
-		return true;
+		return false;
 	}
 	}
 

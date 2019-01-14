@@ -14,7 +14,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.wb.swt.SWTResourceManager;
+
 
 import Interface.DataBaseInterface;
 import db.DataBaseManager;
@@ -83,53 +83,19 @@ import src.Stichting;
 			mntmStichtingGegevensResetten.setText("Stichting gegevens resetten");
 			mntmStichtingGegevensResetten.addListener(SWT.Selection, new Listener() {
 				@Override
-				public void handleEvent(Event event) {
-					final Shell directorydialog = new Shell(mainDisplay);
-					directorydialog.setLayout(new GridLayout(6, true));
-					new Label(directorydialog, SWT.NONE).setText("Directory:");
-					final Text text = new Text(directorydialog, SWT.BORDER);
-				    GridData data = new GridData(GridData.FILL_HORIZONTAL);
-				    data.horizontalSpan = 4;
-				    text.setLayoutData(data);
-				    
-				    Button browseButton =  new Button(directorydialog, SWT.PUSH);
-				    browseButton.setText("Browse...");
-				    browseButton.addSelectionListener(new SelectionAdapter() {
-				    	public void widgetSelected(SelectionEvent event) {
-				    		DirectoryDialog dlg = new DirectoryDialog(directorydialog);
-				    		dlg.setFilterPath(text.getText());
-				    		dlg.setText("Directory");
-				    		dlg.setMessage("Choose the location where you would like to save the XML-datafile. Hint: put it in the source map of where this application is located");
-				    		String dir = dlg.open();
-				    		if(dir!=null) {
-				    			text.setText(dir);
-				    		}
-				    	}
-				    });
-				    Button okButton = new Button(directorydialog, SWT.PUSH);
-				    okButton.addSelectionListener(new SelectionAdapter() {
-				    	@Override
-				    	public void widgetSelected(SelectionEvent e) {
-				    		String locationdir = text.getText();
-				    		boolean succes = resetLogic.resetXML(locationdir);
-				    		if (succes == true) {
-				    			final MessageBox confirmed = new MessageBox(directorydialog, SWT.OK);
-				    			confirmed.setMessage("Resetting XML-datafile succesfull!");
-				    			confirmed.open();
-				    		}
-				    	}
-				    });;
-				    directorydialog.pack();
-				    directorydialog.open();
+				public void handleEvent(Event e) {
+					boolean done = resetLogic.resetXML();
+					if (done == true) {
+						return;
+								}
 				}
-				
 			});
-			
 			new MenuItem(menu_1, SWT.SEPARATOR);
 			
 			//Method to reset the database. This can only be executed by an admin, therefore it is protected with a password
 			//TODO: Implement warning that password is incorrect. Now it just closes without informing the user that reset has been sucessfull.
 			MenuItem mntmDatabaseResetten = new MenuItem(menu_1, SWT.NONE);
+			mntmDatabaseResetten.setText("DataBase Resetten");
 			mntmDatabaseResetten.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -163,12 +129,7 @@ import src.Stichting;
 					dialog.open();
 				}
 			});
-			mntmDatabaseResetten.setText("DataBase Resetten");
 			
-			new MenuItem(menu_1, SWT.SEPARATOR);
-			
-			MenuItem mntmStichtingnaamWijzigen = new MenuItem(menu_1, SWT.NONE);
-			mntmStichtingnaamWijzigen.setText("Stichtingnaam wijzigen");
 			
 			//Listener to open the supplierscreen
 			supplierButton.addListener(SWT.Selection, new Listener() {

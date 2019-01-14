@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
 import db.DataBaseManager;
 import Interface.DataBaseInterface;
 
@@ -31,16 +34,19 @@ public class Stichting {
 	public Double getBalans() {
 		return balans;
 	}
-	public void setBalans(Double balans, Stichting newStichting) {
+	public boolean setBalans(Double balans, Stichting newStichting) {
 		this.balans = balans;
 		StichtingGegevens updateGegevens = new StichtingGegevens();
 		String xml = "C:\\Users\\Britt\\eclipse-workspace\\ShowCase\\src\\src\\gegevens.xml";
 		String stichtingNaam = newStichting.getStichtingNaam();
-		updateGegevens.saveToXML(xml, stichtingNaam, Double.toString(balans));
+		boolean succes = updateGegevens.writeXML(xml, stichtingNaam, Double.toString(balans));
+		if (succes==true) 
+			{return succes;
+				}
+		return false;
 		
 	}
 	public ArrayList<Klant> getKlanten(Stichting newStichting, DataBaseInterface db) {
-		//ArrayList<Klant> klanten = new ArrayList();
 		newStichting.klanten = new ArrayList<Klant>();
 		ResultSet rsCustomers=db.getCustomers();	
 		
@@ -55,7 +61,6 @@ public class Stichting {
 						rsCustomers.getString("opmerkingen"), 
 						rsCustomers.getInt("gebruikerNummer"));
 				newStichting.klanten.add(tempKlant);
-				//klanten.add(tempKlant);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -67,7 +72,6 @@ public class Stichting {
 	}
 	
 	public ArrayList<Leverancier> getLeveranciers(Stichting newStichting, DataBaseInterface db) {
-	    //ArrayList<Klant> klanten = new ArrayList();
 		newStichting.leveranciers = new ArrayList<Leverancier>();
 		ResultSet rsLeveranciers=db.getLeveranciers();			
 			try {
@@ -84,7 +88,6 @@ public class Stichting {
 						rsLeveranciers.getString("opmerkingen"), 
 						rsLeveranciers.getInt("gebruikerNummer"));
 					newStichting.leveranciers.add(tempLeverancier);
-						//klanten.add(tempKlant);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -137,7 +140,6 @@ public class Stichting {
 		Double newBalans;
 		newBalans = balans + prijs;
 		newStichting.setBalans(newBalans, newStichting);
-		//setBalans(newBalans);
 		return newBalans;
 		
 	}

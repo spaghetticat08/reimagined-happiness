@@ -150,7 +150,7 @@ public class CustomerScreen {
 		textOpmerkingen = new Text(customerShell2, SWT.BORDER);
 		textOpmerkingen.setBounds(454, 233, 205, 160);
 		
-		Button btnOpslaan = new Button(customerShell2, SWT.NONE);
+		/*Button btnOpslaan = new Button(customerShell2, SWT.NONE);
 		btnOpslaan.setBounds(442, 489, 101, 25);
 		btnOpslaan.setText("Opslaan");
 		btnOpslaan.addListener(SWT.Selection, new Listener() {
@@ -158,7 +158,7 @@ public class CustomerScreen {
 			public void handleEvent(Event e) {
 				//TODO: change selected information
 			}
-		});
+		});*/
 		
 		Button btnToevoegen = new Button(customerShell2, SWT.NONE);	
 		btnToevoegen.setBounds(338, 489, 101, 25);

@@ -220,7 +220,7 @@ public class OrderScreen {
 		lblOmschrijving.setText("Omschrijving");
 		lblOmschrijving.setBounds(468, 388, 81, 15);
 		
-		Button btnOpslaan = new Button(orderShell, SWT.NONE);
+		/*Button btnOpslaan = new Button(orderShell, SWT.NONE);
 		btnOpslaan.setBounds(727, 581, 94, 25);
 		btnOpslaan.setText("Opslaan");
 		btnOpslaan.addListener(SWT.Selection, new Listener() {
@@ -229,6 +229,7 @@ public class OrderScreen {
 				// TODO Auto-generated method stub
 			}
 		});
+		*/
 		Button btnVerwijderen = new Button(orderShell, SWT.NONE);
 		btnVerwijderen.setText("Verwijderen");
 		btnVerwijderen.setBounds(627, 581, 94, 25);

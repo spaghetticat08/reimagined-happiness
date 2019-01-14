@@ -193,9 +193,10 @@ public class SupplierScreen {
 		lblOpmerkingen.setBounds(338, 312, 88, 15);
 		lblOpmerkingen.setText("Opmerkingen");
 		
-		Button btnOpslaan = new Button(supplierShell, SWT.NONE);
+		/*Button btnOpslaan = new Button(supplierShell, SWT.NONE);
 		btnOpslaan.setBounds(445, 489, 101, 25);
 		btnOpslaan.setText("Opslaan");
+		*/
 		
 		Button btnToevoegen = new Button(supplierShell, SWT.NONE);
 		btnToevoegen.setText("Toevoegen...");

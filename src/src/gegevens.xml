@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<roles>
-    <StichtingNaam>Yoga B.V.</StichtingNaam>
-    <Balans>51.05</Balans>
-</roles>
+<gegevens>
+  <stichtingGegevens>
+    <StichtingNaam>YogaYang</StichtingNaam>
+    <Balans>120.25</Balans>
+  </stichtingGegevens>
+</gegevens>
